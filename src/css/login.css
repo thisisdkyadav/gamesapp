@@ -1,0 +1,19 @@
+.login-body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.login-form-div{
+    width: 700px;
+    padding: 24px;
+    background-color: #000000;
+}
+
+.login-form-div button{
+    padding: 4px;
+    margin: 4px;
+    border: none;
+    border-radius: 1px;
+}
