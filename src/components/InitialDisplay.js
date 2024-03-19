@@ -44,6 +44,9 @@ const InitialDisplay = ({
             finalPawns: { [username]: 0 },
             initialPawns: { [username]: 4 },
             dice: 0,
+            usersDice: {
+                [username]: 0
+            }
 
         })
             .then(() => {

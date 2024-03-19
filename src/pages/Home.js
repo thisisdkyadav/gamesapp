@@ -275,13 +275,14 @@ const Home = ({username}) => {
 
    }
   const takeOut = (id) => {
+    console.log(id,'iiiiiiiiiiiiiiiiiiiiyyyyyyyyyyyyyyyyy');
     if (dice.value === 6) {
       update(ref(db), {
         ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + boardState[id].find((pawn) => pawn[0] === gameColorCode)[1]]: gameColorCode + 'a2',
         ['ludo/games/' + gameID + '/turnStatus']: 'roll',
         ['ludo/games/' + gameID + '/initialPawns/' + username]: (initialPawns[username] - 1)
       })
-    } else if (initialPawns[username] === 4) {
+    } else if (initialPawns[username] + finalPawns[username] === 4) {
       update(ref(db), {
         ['ludo/games/' + gameID + '/turn']: nextUser(username),
         ['ludo/games/' + gameID + '/turnStatus']: 'roll'
@@ -742,11 +743,18 @@ const Home = ({username}) => {
 
   useEffect(() => { 
     if (dice.value && turnStatus === 'roll' && dice.from ) {
-      if (initialPawns[username] === 4) {
-        takeOut(gameColorCode + 'i0')
+      console.log(initialPawns[username],finalPawns[username]);
+      if (initialPawns[username] + finalPawns[username] === 4 && finalPawns[username] !== 4) {
+        takeOut(Object.values(gameState[gameColorCode]).find(position=>position[1]==='i'))
         update(ref(db), {
           ['ludo/games/' + gameID + '/dice']: dice.value,
           ['ludo/games/' + gameID + '/usersDice/'+username]: dice.value,
+        })
+      } else if ((initialPawns[username] ===0  && finalPawns[username] === 3)||((initialPawns[username] + finalPawns[username] === 3) && (dice.value !== 6))) {
+        move(Object.values(gameState[gameColorCode]).find(position=>position[1]!=='i'&&position[1]!=='f'))
+        update(ref(db), {
+          ['ludo/games/' + gameID + '/dice']: dice.value,
+          ['ludo/games/' + gameID + '/usersDice/'+username]: dice.value
         })
       } else {
         update(ref(db), {
