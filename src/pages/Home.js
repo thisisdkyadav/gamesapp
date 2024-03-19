@@ -18,7 +18,7 @@ const Home = () => {
   const [gameID, setGameID] = useState(null)
   const inputEmail = useRef()
   const [users, setUsers] = useState({})
-  const [status, setStatus] = useState(0)
+  const [status, setStatus] = useState('')
   const [invites, setInvites] = useState({})
   const [username, setUsername] = useState('')
   const [dice, setDice] = useState({value:0,from:0})
@@ -77,7 +77,10 @@ const Home = () => {
     ra4: [],
     ra5: [],
     ra6: [],
-    rf0: [],
+    rfa: [],
+    rfb: [],
+    rfc: [],
+    rfd: [],
 
     gi0: [],
     gi1: [],
@@ -101,7 +104,10 @@ const Home = () => {
     ga4: [],
     ga5: [],
     ga6: [],
-    gf0: [],
+    gfa: [],
+    gfb: [],
+    gfc: [],
+    gfd: [],
 
     yi0: [],
     yi1: [],
@@ -125,7 +131,10 @@ const Home = () => {
     ya4: [],
     ya5: [],
     ya6: [],
-    yf0: [],
+    yfa: [],
+    yfb: [],
+    yfc: [],
+    yfd: [],
 
     bi0: [],
     bi1: [],
@@ -149,7 +158,10 @@ const Home = () => {
     ba4: [],
     ba5: [],
     ba6: [],
-    bf0: [],
+    bfa: [],
+    bfb: [],
+    bfc: [],
+    bfd: [],
 
 
   })
@@ -171,15 +183,62 @@ const Home = () => {
     }
   }
   const setBoard = () => {
-    setGameState({
-      ...gameState, r: {
-        a: 'gb4',
-        b: 'yb4',
-        c: 'ba3',
-        d: 'gb4',
-
+    set(ref(db, 'ludo/games/' + username), {
+      users: {
+        'inrowmail@gmail_com': 'joined',
+        'deveshgilyav@gmail_com': 'joined',
+        'awacxo@gmail_com': 'joined',
+        'itsdeveshyadav@gmail_com': 'joined'
+      },
+      gameState: {
+        r: {
+          a: 'rfa',
+          b: 'rfb',
+          c: 'rfc',
+          d: 'rh3',
+        },
+        g: {
+          a: 'gfa',
+          b: 'gfb',
+          c: 'gfc',
+          d: 'gfd'
+        },
+        y: {
+          a: 'yi0',
+          b: 'yi1',
+          c: 'yi2',
+          d: 'yi3'
+        },
+        b: {
+          a: 'bfa',
+          b: 'bfb',
+          c: 'bfc',
+          d: 'bfd'
+        }
+      },
+      status: 'active',
+      turn: 'awacxo@gmail_com',
+      turnStatus: 'move',
+      finalPawns: { 
+        'inrowmail@gmail_com': 0,
+        'deveshgilyav@gmail_com': 4,
+        'awacxo@gmail_com': 3,
+        'itsdeveshyadav@gmail_com': 4
+       },
+      initialPawns: { 
+        'inrowmail@gmail_com': 4,
+        'deveshgilyav@gmail_com': 0,
+        'awacxo@gmail_com': 0,
+        'itsdeveshyadav@gmail_com': 0
+       },
+      dice: 4,
+      results: {
+        'deveshgilyav@gmail_com': 1,
+        'itsdeveshyadav@gmail_com': 0
       }
-    })
+
+    });
+    
   }
   const logoutUser = () => {
     signOut(auth);
@@ -461,65 +520,59 @@ const Home = () => {
     let positionIndex = path.indexOf(position)
 
     let newPositionIndex = positionIndex + dice.value
-    let newPosition = ''
+    let newPosition = path[newPositionIndex]
 
     if (newPositionIndex < 56) {
 
-      if (newPosition > 50 || boardState[newPosition].length === 0 || [0,8,13,21,26,34,39,47].includes(newPosition) || boardState[newPosition][0][0] === gameColorCode) {
-        if (dice === 6) {
+      if (newPositionIndex > 50 || boardState[newPosition].length === 0 || [0,8,13,21,26,34,39,47].includes(newPositionIndex) || boardState[newPosition][0][0] === gameColorCode) {
+        if (dice.value === 6) {
           update(ref(db), {
-            ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: path[newPositionIndex],
+            ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: newPosition,
             ['ludo/games/' + gameID + '/turnStatus']: 'roll'
           })
         } else {
           update(ref(db), {
-            ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: path[newPositionIndex],
+            ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: newPosition,
             ['ludo/games/' + gameID + '/turn']: nextUser(username),
             ['ludo/games/' + gameID + '/turnStatus']: 'roll'
           })
         }
-      update(ref(db), {
-        ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: path[newPositionIndex],
-        ['ludo/games/' + gameID + '/turn']: nextUser(username),
-        ['ludo/games/' + gameID + '/turnStatus']: 'roll'
-      })
       } else {
         let tempPawns = boardState[newPosition]
         let tempPawnUser = Object.keys(users)[colorCodeList.indexOf(tempPawns[0][0])]
         let updates = {
-          ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: path[newPositionIndex],
-          ['ludo/games/' + gameID + '/gameState/initialPawns/'+tempPawnUser]: initialPawns[tempPawnUser] + tempPawns.length,
+          ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: newPosition,
+          ['ludo/games/' + gameID + '/initialPawns/'+tempPawnUser]: initialPawns[tempPawnUser] + tempPawns.length,
           ['ludo/games/' + gameID + '/turnStatus']: 'roll'
         }
 
         tempPawns.forEach((pawn)=>{
           updates['ludo/games/' + gameID + '/gameState/' + pawn[0] + '/' + pawn[1]]= pawn[0]+'i'+['a','b','c','d'].indexOf(pawn[1])
         })
-
         update(ref(db), updates)
       }
-    } else if (newPositionIndex > 56) {
+    } else if (newPositionIndex > 56 && finalPawns[username]===3) {
       let updates =  {['ludo/games/' + gameID + '/turnStatus']: 'roll'}
 
-      if (dice !== 6) {
+      if (dice.value !== 6) {
         updates['ludo/games/' + gameID + '/turn']= nextUser(username)
       }
       update(ref(db),updates)
       return 0
-    } else {
-      if (finalPawns === 3) {
+    } else if(newPositionIndex===56) {
+      if (finalPawns[username] === 3) {
         update(ref(db), {
           ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: (gameColorCode + 'f' + pawnCode[1]),
           ['ludo/games/' + gameID + '/turn']: nextUser(username),
           ['ludo/games/' + gameID + '/turnStatus']: 'roll',
-          ['ludo/games/' + gameID + '/finalPawns/' + username]: (finalPawns + 1),
+          ['ludo/games/' + gameID + '/finalPawns/' + username]: finalPawns[username] + 1,
           ['ludo/games/' + gameID + '/results/' + username]: Object.keys(results).length
         })
       } else {
         update(ref(db), {
           ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: (gameColorCode + 'f' + pawnCode[1]),
           ['ludo/games/' + gameID + '/turnStatus']: 'roll',
-          ['ludo/games/' + gameID + '/finalPawns/' + username]: (finalPawns + 1)
+          ['ludo/games/' + gameID + '/finalPawns/' + username]: finalPawns[username] + 1
         })
       }
     }
@@ -574,7 +627,7 @@ const Home = () => {
       });
   }
   const startGame = () => {
-    if (Object.keys(users).length == 4) {
+    if (Object.keys(users).filter(user=>users[user]==='joined').length == 4) {
       update(ref(db), {
         ['ludo/games/' + gameID + '/status']: 'active'
       })
@@ -602,7 +655,7 @@ const Home = () => {
       ['ludo/games/' + game + '/users/' + username]: 'joined',
       ['ludo/games/' + game + '/initialPawns/' + username]: 4,
       ['ludo/games/' + game + '/finalPawns/' + username]: 0,
-      ['ludo/users/' + username]: { invited: null, gameID: game }
+      ['ludo/users/' + username]: { invites: null, gameID: game }
     })
   }
   const rejectInvite = (game) => {
@@ -618,6 +671,7 @@ const Home = () => {
           <div className='dice' onClick={rollDice}>{dice.value}</div>
           {gameColorCode}
           {turnStatus}
+          {Object.keys(results).length?Object.keys(results):''}
         </div>
 
       )
@@ -636,7 +690,13 @@ const Home = () => {
         </div>
       )
     } else {
-      return <button onClick={createNewGame}>Start new game</button>
+      return (
+        <div>
+      <button onClick={createNewGame}>Start new game</button>
+      <br />
+      {Object.keys(results).length?Object.keys(results):''}
+      </div>
+      )
     }
   }
   const InvitesLayout = () => {
@@ -722,7 +782,11 @@ const Home = () => {
       ra4: [],
       ra5: [],
       ra6: [],
-
+      rfa: [],
+      rfb: [],
+      rfc: [],
+      rfd: [],
+  
       gi0: [],
       gi1: [],
       gi2: [],
@@ -745,7 +809,11 @@ const Home = () => {
       ga4: [],
       ga5: [],
       ga6: [],
-
+      gfa: [],
+      gfb: [],
+      gfc: [],
+      gfd: [],
+  
       yi0: [],
       yi1: [],
       yi2: [],
@@ -768,7 +836,11 @@ const Home = () => {
       ya4: [],
       ya5: [],
       ya6: [],
-
+      yfa: [],
+      yfb: [],
+      yfc: [],
+      yfd: [],
+  
       bi0: [],
       bi1: [],
       bi2: [],
@@ -791,8 +863,12 @@ const Home = () => {
       ba4: [],
       ba5: [],
       ba6: [],
-
-
+      bfa: [],
+      bfb: [],
+      bfc: [],
+      bfd: [],
+  
+  
     }
     colorList.forEach(color => {
       tempState[gameState[color].a].push(color + 'a')
@@ -804,10 +880,6 @@ const Home = () => {
     setBoardState(tempState)
 
   }, [gameState])
-
-  useEffect(() => {
-
-  }, [boardState])
 
   useEffect(() => { 
     if (dice.value && turnStatus === 'roll' && dice.from ) {
@@ -835,11 +907,9 @@ const Home = () => {
             console.log('djgfyudhgfyuid ', data.users, gameID, invites);
             let updates = {}
             updates['ludo/users/' + username + '/gameID'] = null
-            Object.keys(data.users).filter((user) => data.users[user] === 'invited').map((user) => {
-              console.log(user, data.users[user]);
+            Object.keys(data.users).filter((user) => data.users[user] === 'invited').forEach((user) => {
               updates['ludo/users/' + user + '/invites/' + gameID] = null
             })
-            updates['ludo/games/' + gameID] = null
             update(ref(db), updates)
           }
           setGameState(data.gameState)
@@ -851,38 +921,40 @@ const Home = () => {
           setInitialPawns(data.initialPawns)
           setFinalPawns(data.finalPawns)
           data.results ? setResults(data.results) : setResults({})
-        } else {
-          update(ref(db), {
-            ['ludo/users/' + username + '/gameID']: null
 
-          })
+        } else {
+          // update(ref(db), {
+          //   ['ludo/users/' + username + '/gameID']: null
+
+          // })
         }
       });
     } else {
-      setUsers({})
-      setStatus('new')
+      // setUsers({})
+      // setStatus('new')
     }
 
   }, [gameID])
 
   useEffect(() => {
     if (Object.keys(results).length === 3) {
-      let resultsCopy = Object.keys({...results})
-      let usersCopy = Object.keys({...users})
-      resultsCopy = usersCopy.filter((user) => !usersCopy.includes(user));
-      update(ref(db), {
-        ['ludo/games/' + gameID + '/status']: 'finished'
-      })
+      let resultsCopy = {...results}
+      let gameIDCopy = gameID
+      // let usersCopy = Object.keys({...users})
+      console.log(resultsCopy,'---------++++',results,gameID,gameIDCopy);
+      if (gameIDCopy) {
+        update(ref(db), {
+          ['ludo/games/' + gameIDCopy + '/status']: 'finished'
+        })
+      }
       let alertMessage = ''
-      resultsCopy.forEach((user, index)=> {
-        alertMessage+=user+': '+toString(index+1)
+      Object.keys(resultsCopy).forEach((user)=> {
+        alertMessage+=user+': '+resultsCopy[user]+'\n'
       })
       alert(alertMessage)
     }
   
   }, [results])
-
-  
 
 
 
@@ -896,17 +968,21 @@ const Home = () => {
         <button onClick={setBoard}>set board</button>
         <div className="main">
 
-          <div className="invite-details">
+          {/* <div className="invite-details">
             <InvitesLayout />
-          </div>
+          </div> */}
 
-          <div className="game-details">
+          {/* <div className="game-details">
             <GameDetailLayout />
-          </div>
+          </div> */}
+          {gameState===''&&gameState==='finished'?<GameDetailLayout />:''}
+
+          {gameState==='waiting'?<InvitesLayout />:''}
 
 
+          {gameState==='active'?<LudoBoard users={users} turn={turn} />:''}
+          
 
-          <LudoBoard users={users} turn={turn} />
         </div>
       </stateContext.Provider>
 

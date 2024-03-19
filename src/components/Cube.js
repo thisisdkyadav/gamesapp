@@ -38,9 +38,9 @@ const Cube = ({color, isStar=false,id,pawnsOnCube=0}) => {
               id={pawn}
               style={{
                 position: 'absolute',
-                top:  index * 3, // Adjust vertical spacing
+                bottom:  index * 3, // Adjust vertical spacing
                 left: index * 2, // Adjust horizontal spacing (optional)
-                zIndex: index+2, // Higher z-index for top pawns
+                zIndex: 100 - index, // Higher z-index for top pawns
                 width: 43 - noOfPawns*3,
                 height: 42 - noOfPawns*2
 
