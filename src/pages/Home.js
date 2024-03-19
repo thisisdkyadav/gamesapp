@@ -4,23 +4,25 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, set, onValue, update } from "firebase/database";
 import { useEffect, useState, useRef } from 'react';
 import Loading from '../components/loding';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import '../css/ludo.css';
 import { stateContext } from '../context/context'
 import LudoBoard from '../components/LudoBoard'
+import Waiting from '../components/Waiting';
+import InitialDisplay from '../components/InitialDisplay';
+import Invites from '../components/Invites';
+import Ludo from '../components/Ludo';
 
-const Home = () => {
+const Home = ({username}) => {
 
   let colorCodeList = ['r', 'g', 'y', 'b']
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [gameID, setGameID] = useState(null)
-  const inputEmail = useRef()
   const [users, setUsers] = useState({})
   const [status, setStatus] = useState('')
   const [invites, setInvites] = useState({})
-  const [username, setUsername] = useState('')
   const [dice, setDice] = useState({value:0,from:0})
   const [turn, setTurn] = useState('')
   const [turnStatus, setTurnStatus] = useState('')
@@ -28,6 +30,8 @@ const Home = () => {
   const [initialPawns, setInitialPawns] = useState(4)
   const [finalPawns, setFinalPawns] = useState(0)
   const [results, setResults] = useState({})
+  const [preResult, setPreResult] = useState([])
+  const [usersDice, setUsersDice] = useState({})
   const [gameState, setGameState] = useState({
     r: {
       a: 'ri0',
@@ -235,6 +239,12 @@ const Home = () => {
       results: {
         'deveshgilyav@gmail_com': 1,
         'itsdeveshyadav@gmail_com': 0
+      },
+      usersDice:{
+        "awacxo@gmail_com": 4,
+        "deveshgilyav@gmail_com": 0,
+        "inrowmail@gmail_com": 4,
+        "itsdeveshyadav@gmail_com": 3
       }
 
     });
@@ -577,148 +587,6 @@ const Home = () => {
       }
     }
   }
-  const createNewGame = () => {
-    set(ref(db, 'ludo/games/' + username), {
-      users: {
-        [username]: 'joined'
-      },
-      gameState: {
-        r: {
-          a: 'ri0',
-          b: 'ri1',
-          c: 'ri2',
-          d: 'ri3',
-        },
-        g: {
-          a: 'gi0',
-          b: 'gi1',
-          c: 'gi2',
-          d: 'gi3'
-        },
-        y: {
-          a: 'yi0',
-          b: 'yi1',
-          c: 'yi2',
-          d: 'yi3'
-        },
-        b: {
-          a: 'bi0',
-          b: 'bi1',
-          c: 'bi2',
-          d: 'bi3'
-        }
-      },
-      status: 'waiting',
-      turn: username,
-      turnStatus: 'roll',
-      finalPawns: { [username]: 0 },
-      initialPawns: { [username]: 4 },
-      dice: 0,
-
-    })
-      .then(() => {
-        set(ref(db, 'ludo/users/' + username), {
-          invites: null,
-          gameID: username
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  const startGame = () => {
-    if (Object.keys(users).filter(user=>users[user]==='joined').length == 4) {
-      update(ref(db), {
-        ['ludo/games/' + gameID + '/status']: 'active'
-      })
-    }
-  }
-  const inviteUser = () => {
-    let email = inputEmail.current.value.replace('.', "_")
-    let userList = ['user1', 'user2', 'user3', 'user4']
-    console.log(!users[email], 'sfsdf');
-    if (!email) {
-      alert('enter email')
-    } else if (users[email]) {
-      alert('user already added')
-    } else if (Object.keys(users).length === 4) {
-      alert('game is full')
-    } else {
-      update(ref(db), {
-        ['ludo/games/' + gameID + '/users/' + email]: 'invited',
-        ['ludo/users/' + email + '/invites/' + username]: false
-      })
-    }
-  }
-  const acceptInvite = (game) => {
-    update(ref(db), {
-      ['ludo/games/' + game + '/users/' + username]: 'joined',
-      ['ludo/games/' + game + '/initialPawns/' + username]: 4,
-      ['ludo/games/' + game + '/finalPawns/' + username]: 0,
-      ['ludo/users/' + username]: { invites: null, gameID: game }
-    })
-  }
-  const rejectInvite = (game) => {
-    update(ref(db), {
-      ['ludo/games/' + game + '/users/' + username]: null,
-      ['ludo/users/' + username + '/invites/' + game]: null
-    })
-  }
-  const GameDetailLayout = () => {
-    if (status === 'active') {
-      return (
-        <div>
-          <div className='dice' onClick={rollDice}>{dice.value}</div>
-          {gameColorCode}
-          {turnStatus}
-          {Object.keys(results).length?Object.keys(results):''}
-        </div>
-
-      )
-    } else if (status === 'waiting') {
-      return (
-        <div>
-          <input placeholder="Email" ref={inputEmail} type="email" />
-          {Object.keys(users).map((user, index) => {
-            return <div key={index}>{user} ({users[user]})</div>
-          })
-          }
-          <br />
-          <button onClick={inviteUser}>Add Player</button>
-          <br />
-          <button onClick={startGame}>Start game</button>
-        </div>
-      )
-    } else {
-      return (
-        <div>
-      <button onClick={createNewGame}>Start new game</button>
-      <br />
-      {Object.keys(results).length?Object.keys(results):''}
-      </div>
-      )
-    }
-  }
-  const InvitesLayout = () => {
-    if (Object.keys(invites).length > 0) {
-      return (
-        <div>
-          <h2>Invites</h2>
-          {Object.keys(invites).map((game, index) => {
-            if (invites[game]) {
-              return <div key={index}>{game.replace('_', '.')} (Joined)</div>
-
-            } else {
-              return <div key={index}>{game.replace('_', '.')} <button onClick={() => acceptInvite(game)}>Accept</button> <button onClick={() => rejectInvite(game)}>Reject</button></div>
-            }
-          })}
-        </div>
-      )
-    } else {
-      return <div>No invites</div>
-    }
-  }
-
 
 
   useEffect(() => {
@@ -726,15 +594,6 @@ const Home = () => {
     usersRef.current = users
 
   }, [users])
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUsername(user.email.replace('.', '_'));
-      } else { navigate("/login"); }
-    });
-    return () => unsubscribe();
-  }, [])
 
   useEffect(() => {
     if (username) {
@@ -887,10 +746,12 @@ const Home = () => {
         takeOut(gameColorCode + 'i0')
         update(ref(db), {
           ['ludo/games/' + gameID + '/dice']: dice.value,
+          ['ludo/games/' + gameID + '/usersDice/'+username]: dice.value,
         })
       } else {
         update(ref(db), {
           ['ludo/games/' + gameID + '/dice']: dice.value,
+          ['ludo/games/' + gameID + '/usersDice/'+username]: dice.value,
           ['ludo/games/' + gameID + '/turnStatus']: 'move',
         })
       }
@@ -918,6 +779,7 @@ const Home = () => {
           setTurn(data.turn)
           setTurnStatus(data.turnStatus)
           setDice({...dice,value:data.dice, from: 0})
+          setUsersDice(data.usersDice)
           setInitialPawns(data.initialPawns)
           setFinalPawns(data.finalPawns)
           data.results ? setResults(data.results) : setResults({})
@@ -940,18 +802,24 @@ const Home = () => {
     if (Object.keys(results).length === 3) {
       let resultsCopy = {...results}
       let gameIDCopy = gameID
-      // let usersCopy = Object.keys({...users})
-      console.log(resultsCopy,'---------++++',results,gameID,gameIDCopy);
+      let usersCopy = Object.keys({...users})
+      usersCopy.forEach((user)=>{
+        if (!Object.keys(resultsCopy).includes(user)) {
+          resultsCopy[user]=3
+        }
+      })
       if (gameIDCopy) {
         update(ref(db), {
           ['ludo/games/' + gameIDCopy + '/status']: 'finished'
         })
       }
-      let alertMessage = ''
-      Object.keys(resultsCopy).forEach((user)=> {
-        alertMessage+=user+': '+resultsCopy[user]+'\n'
-      })
-      alert(alertMessage)
+      let resultList = []
+      for (let i = 0; i < 4; i++) {
+        resultList.push(Object.keys(resultsCopy).find(user => resultsCopy[user] === i))
+        
+      }
+      
+      setPreResult(resultList)
     }
   
   }, [results])
@@ -962,26 +830,18 @@ const Home = () => {
   return (
     <>
       <stateContext.Provider value={{ boardState, setBoardState, handleCubeClick }}>
-
         {username}
         <button onClick={logoutUser}>Logout</button>
-        <button onClick={setBoard}>set board</button>
+        {/* <button onClick={setBoard}>set board</button> */}
         <div className="main">
+          {status!=='active' && Object.keys(invites).length > 0?<Invites invites={invites} username={username} />:''}
 
-          {/* <div className="invite-details">
-            <InvitesLayout />
-          </div> */}
+          {status===''||status==='finished'?<InitialDisplay username={username} results={results} preResult={preResult} />:''}
 
-          {/* <div className="game-details">
-            <GameDetailLayout />
-          </div> */}
-          {gameState===''&&gameState==='finished'?<GameDetailLayout />:''}
+          {status==='waiting'?<Waiting gameID={gameID} users={users} username={username} />:''}
 
-          {gameState==='waiting'?<InvitesLayout />:''}
-
-
-          {gameState==='active'?<LudoBoard users={users} turn={turn} />:''}
-          
+          {status==='active'?<Ludo users={users} turn={turn} gameColorCode={gameColorCode} turnStatus={turnStatus} rollDice={rollDice} dice={dice} results={results} username={username} usersDice={usersDice} />:''}
+          {/* <Ludo users={users} turn={turn} gameColorCode={gameColorCode} turnStatus={turnStatus} rollDice={rollDice} dice={dice} results={results} username={username} usersDice={usersDice} /> */}
 
         </div>
       </stateContext.Provider>

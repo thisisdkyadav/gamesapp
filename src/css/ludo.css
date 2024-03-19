@@ -55,14 +55,17 @@ body{
     gap: 100px;
     height: 95vh;
 }
-/* 
-.ludo-board-container {
-    border: 2px solid black;
+
+/* .ludo {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 10px;
 } */
 
 .ludo-board-container .board-cover {
     width: calc(var(--cube-dimension) * 15);
-    /* height: 50px; */
+    height: 40px;
     /* background-color: #f6fa7a; */
     display: flex;
     justify-content: space-between;
@@ -71,10 +74,12 @@ body{
 
 .ludo-board-container .board-cover .players-details {
     width: calc(var(--cube-dimension) * 6);
+    display: flex;
+    padding: 0 --cube-margin;
     /* height: 100%; */
     /* background-color: #c7a7ff; */
     /* align-items: center; */
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 
@@ -174,7 +179,7 @@ body{
     width: calc(var(--cube-dimension) * 6 - var(--cube-margin) * 2);
     height: calc(var(--cube-dimension) * 6 - var(--cube-margin) * 2);
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     margin: var(--cube-margin);
     display: flex;
     justify-content: center;
@@ -252,10 +257,23 @@ body{
 }
 
 
-.dice {
-    width: 50px;
-    height: 50px;
+.dice-move {
+    width: 40px;
+    height: 40px;
     background-color: #298560;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #defff2;
+    border-radius: 4px;
+}
+
+
+.dice-roll {
+    width: 40px;
+    height: 40px;
+    background-color: #0080db;
     display: flex;
     align-items: center;
     justify-content: center;

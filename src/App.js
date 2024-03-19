@@ -1,24 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import { auth, db } from "./config/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import Home from './pages/Home';
+import Login from './pages/Login';
+import { useEffect, useState } from 'react';
 
 function App() {
+
+  const [username, setUsername] = useState('')
+
+
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {setUsername(user.email.replace(/\./g, '_'));}
+    });
+    return () => unsubscribe();
+  }, [])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    {username?<Home username={username}/>:<Login setUsername={setUsername}/>}
+    </>
   );
 }
 

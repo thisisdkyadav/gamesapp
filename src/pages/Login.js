@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase";
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-    const navigate = useNavigate();
+const Login = ({setUsername}) => {
+    // const navigate = useNavigate();
 
         const [email, setEmail] = useState('')
         const [password, setPassword] = useState('')
@@ -16,8 +16,7 @@ const Login = () => {
                 const res = await createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Signed in 
-                    const user = userCredential.user;
-                    navigate("/");
+                    setUsername(userCredential.user)
 
                   })
                   .catch((error) => {
@@ -32,8 +31,7 @@ const Login = () => {
                 const res = await signInWithPopup(auth, googleProvider)
                 .then((userCredential) => {
                     // Signed in 
-                    const user = userCredential.user;
-                    navigate("/");
+                    setUsername(userCredential.user)
                   })
                   .catch((error) => {
                     const errorCode = error.code;
@@ -42,16 +40,16 @@ const Login = () => {
         }
 
         
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {navigate("/");
-      } 
-    });
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, (user) => {
+//       if (user) {navigate("/");
+//       } 
+//     });
 
 
-    return () => unsubscribe();
+//     return () => unsubscribe();
      
-}, [])
+// }, [])
 
     return (
         <>
