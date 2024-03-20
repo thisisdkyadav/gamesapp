@@ -1,6 +1,7 @@
 import React from 'react'
 import { ref, update } from "firebase/database";
 import { db } from "../config/firebase";
+import '../css/invites.css'
 
 const Invites = ({
     username,
@@ -22,18 +23,25 @@ const Invites = ({
       })
     }
   return (
-    <div>
-          <h2>Invites</h2>
-          {Object.keys(invites).map((game, index) => {
+    <div className='invites'>
+          <h2>{invites&&Object.keys(invites).length === 0?'No Invites':'Invites'}</h2>
+          <hr />
+          <div className="grid">
+          {invites&&Object.keys(invites).map((game, index) => {
             if (invites[game]) {
-              return <div key={index}>{game.replace('_', '.')} (Joined)</div>
+              return <div key={index}>{game.replace(/\_/g, '.')} (Joined)</div>
 
             } else {
-              return <div key={index}>{game.replace('_', '.')} <button onClick={() => acceptInvite(game)}>Accept</button> <button onClick={() => rejectInvite(game)}>Reject</button></div>
+              return (<>
+              <div className='grid-c1' key={index}>{game.replace(/\_/g, '.')} </div>
+              <div><div className='grid-c2' onClick={() => acceptInvite(game)}>+</div> </div>
+              <div><div className='grid-c2' onClick={() => rejectInvite(game)}>-</div></div>
+              </>)
             }
           })}
+          </div>
 
-          {Object.keys(invites).length === 0?'No invites':''}
+          
     </div>
   )
 }

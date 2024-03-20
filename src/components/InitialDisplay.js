@@ -6,7 +6,6 @@ const InitialDisplay = ({
     username,
     preResult
 }) => {
-    console.log('asdfsdfsdf',preResult);
     const createNewGame = () => {
         set(ref(db, 'ludo/games/' + username), {
             users: {

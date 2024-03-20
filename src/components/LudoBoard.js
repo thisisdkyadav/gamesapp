@@ -25,6 +25,13 @@ const LudoBoard = ({ users, turn, username, rollDice, turnStatus, usersDice }) =
   console.log(finalColorList,finalUsersList,finalUsersList[1]&&turnStatus==='move',usersDice,turn,turnStatus);
 
   return (
+    <>
+    <div className='ludo'>
+        {/* <div>
+          {turnStatus}
+          {Object.keys(results).length?Object.keys(results):''}
+        </div> */}
+
     <div className="ludo-board-container">
       <div className='board-cover'>
 
@@ -62,6 +69,8 @@ const LudoBoard = ({ users, turn, username, rollDice, turnStatus, usersDice }) =
       </div>
 
     </div>
+        </div>
+        </>
   )
 }
 

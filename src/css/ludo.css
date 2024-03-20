@@ -1,5 +1,7 @@
 :root{
-    --cube-dimension: 40px;
+    --board-dimension: min(600px,90vw,85vh);
+    --cube-dimension: calc(var(--board-dimension) / 15);
+    /* --cube-dimension: 40px; */
     --cube-margin: 2px;
     --shadow--blur:4px;
     --shadow--spread:1px;
@@ -32,28 +34,23 @@
     --background-color: #8dc9ff; */
 
     /* theme 4 */
-    --yellow: rgb(162 165 0);
+    /* --yellow: rgb(162 165 0);
     --red: rgb(203 0 0);
     --purple: #c7a7ff;
     --blue: rgb(0 0 152);
     --green: rgb(0 168 0);
     --normal-color: #e7f7ff;
-    --background-color: #bbdcfd;
+    --background-color: #bbdcfd; */
 
-}
+    /* theme 5 */
+    --yellow: rgb(213 216 33);
+    --red: rgb(255 0 0);
+    --purple: #c7a7ff;
+    --blue: rgb(0 0 255);
+    --green: rgb(8 182 8);
+    --normal-color: #beddff;
+    --background-color: #8dc9ff;
 
-body{
-    
-    background-color: var(--background-color);
-}
-
-.main{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 100px;
-    height: 95vh;
 }
 
 /* .ludo {
@@ -65,7 +62,7 @@ body{
 
 .ludo-board-container .board-cover {
     width: calc(var(--cube-dimension) * 15);
-    height: 40px;
+    height: var(--cube-dimension);
     /* background-color: #f6fa7a; */
     display: flex;
     justify-content: space-between;
@@ -144,11 +141,6 @@ body{
     position: relative;
 }
 
-.cube:hover{
-    box-shadow: 0px 0px 6px 6px #7ab4ff;
-    z-index: 1;
-    
-}
 
 .pawn{
     transition: transform 0.4s;
@@ -205,19 +197,14 @@ body{
 
 .big-cube .big-cube-circle{
     place-self: center;
-    width: 50px;
-    height: 50px;
+    width: calc(var(--cube-dimension) * 1.25 );
+    height: calc(var(--cube-dimension) * 1.25 );
     border-radius: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.big-cube .big-cube-circle:hover{
-    box-shadow: 0px 0px 6px 6px #7ab4ff;
-    z-index: 1;
-    
-}
 
 .b-red{
     background-color: var(--red);
@@ -258,8 +245,8 @@ body{
 
 
 .dice-move {
-    width: 40px;
-    height: 40px;
+    width: var(--cube-dimension);
+    height: var(--cube-dimension);
     background-color: #298560;
     display: flex;
     align-items: center;
@@ -271,8 +258,8 @@ body{
 
 
 .dice-roll {
-    width: 40px;
-    height: 40px;
+    width: var(--cube-dimension);
+    height: var(--cube-dimension);
     background-color: #0080db;
     display: flex;
     align-items: center;
@@ -283,3 +270,18 @@ body{
 }
 
 
+
+
+@media (hover:hover){
+    
+.cube:hover{
+    box-shadow: 0px 0px 6px 6px #7ab4ff;
+    z-index: 1;
+    
+}
+.big-cube .big-cube-circle:hover{
+    box-shadow: 0px 0px 6px 6px #7ab4ff;
+    z-index: 1;
+    
+}
+}

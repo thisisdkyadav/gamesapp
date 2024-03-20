@@ -1,0 +1,105 @@
+
+
+.waiting input{
+    width: 100%;
+    height: 40px;
+    border: none;
+    border-radius: 500px;
+    margin: 0px;
+    padding: 10px 20px;
+}
+
+
+.waiting{
+    max-width:90vw;
+    width: 400px;
+    padding: 24px;
+    background-color: var(--box-b-color);
+    box-shadow: var(--box-shadow);
+    border-radius: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+
+.grid{
+    margin: 8px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    column-gap: 4px;
+    row-gap: 8px;
+}
+
+.grid > div{
+    display: flex;
+    align-items: center;
+}
+
+.grid-c1{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0px 10px;
+}
+
+.grid-c12{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0px 10px;
+    grid-column-start: 0;
+    grid-column-end: 2;
+}
+
+.grid-c2{
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 500px;
+    background-color: #f8fcff;
+    font-size: 24px;
+    transition: 200ms ease-in-out all;
+}
+
+
+
+.waiting button{
+    background-color: #f8fcff;
+    transition: 200ms ease-in-out all;
+    margin: 0;
+}
+
+
+.start-button {
+    width: 100%;
+}
+
+.message{
+    color: rgb(218, 0, 0);
+    font-size: 16px;
+}
+
+
+@media (hover:hover){
+.grid-c2:hover{
+    background-color: rgb(0, 145, 255);
+    color: white; 
+    user-select: none;
+}
+.waiting button:hover{
+    background-color: rgb(0, 145, 255);
+    color: white;
+}
+    
+}
