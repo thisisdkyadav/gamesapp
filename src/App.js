@@ -9,9 +9,7 @@ import { sendEmailVerification } from 'firebase/auth';
 import { set } from 'firebase/database';
 
 function App() {
-  console.log('app');
   
-
   const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
   const [authStatus, setAuthStatus] = useState('initial')

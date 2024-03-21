@@ -371,7 +371,6 @@ const Home = () => {
 
     })
       .then((a) => {
-        console.log('game created', a);
         setGameID(logedUser.replace('.', '_'))
         setStatus('waiting')
       })
@@ -427,7 +426,6 @@ const Home = () => {
     if (gameID) {
       onValue(ref(db, 'ludo/games/' + gameID), (snapshot) => {
         const data = snapshot.val();
-        console.log(data);
         if (data) {
           setGameState(data.gameState)
           setStatus(data.status)

@@ -3,10 +3,9 @@ import Pawn from './Pawn'
 import { useContext, useEffect, useState } from 'react'
 import { stateContext } from '../context/context'
 
-const Cube = ({color, isStar=false,id,pawnsOnCube=0}) => {
+const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSizeRatio}) => {
 
   const gbl = useContext(stateContext)
-
   let colorObj = {
     r: 'red',
     g: 'green',
@@ -23,30 +22,36 @@ const Cube = ({color, isStar=false,id,pawnsOnCube=0}) => {
       setPawns(gbl.boardState[id]);
     }
   }, [gbl.boardState]);
-
+  
   return (
     <>
-    <div id={id} onClick={()=>gbl.handleCubeClick(id)} className={`cube b-${color} ${ isStar ?'star':''}`} >
+    <div id={id} onClick={()=>gbl.handleCubeClick(id)} className={`${home?'home-cube-div':'cube'} b-${color} ${ isStar ?'star':''} ${color}-hover`} >
       
     {noOfPawns > 0 &&
-        pawns.map((pawn, index) => (
-            
+        pawns.map((pawn, index) => {
+          let styles = {
+              position: 'absolute',
+              bottom:  (index+1)*2*sizeRatio, // Adjust vertical spacing
+              left: ((index+1) * 3.7 - 4)*sizeRatio, // Adjust horizontal spacing (optional)
+              zIndex: 500 - index, // Higher z-index for top pawns
+              width: (43 - noOfPawns*3 -4)*sizeRatio,
+              height: (42 - noOfPawns*2 -5)*sizeRatio,
+            }
+            if (pawn[0]===gbl.gameColorCode && gbl.isMove) {
+              styles.width = styles.width*(10000**(1/styles.width))*sizeRatio
+              styles.height = styles.height*(10000**(1/styles.width))*sizeRatio
+              styles.left = (styles.left- 5)*sizeRatio
+            }
+
+            return (
             <Pawn
               key={id+'-'+index}
               color={colorObj[pawn[0]]}
               // position={position}
               id={pawn}
-              style={{
-                position: 'absolute',
-                bottom:  index * 3, // Adjust vertical spacing
-                left: index * 2, // Adjust horizontal spacing (optional)
-                zIndex: 100 - index, // Higher z-index for top pawns
-                width: 43 - noOfPawns*3,
-                height: 42 - noOfPawns*2
-
-              }}
+              style={styles}
             />
-          ))}
+          )})}
 
     </div>
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import BigCube from './BigCube';
 import CubesContainer from './CubesContainer';
+import LudoHome from './LudoHome';
 
 const LudoBoard = ({ users, turn, username, rollDice, turnStatus, usersDice }) => {
 
@@ -8,7 +9,6 @@ const LudoBoard = ({ users, turn, username, rollDice, turnStatus, usersDice }) =
   let usersList = Object.keys(users)
 
   let userIndex = usersList.indexOf(username)
-  console.log(colorList, userIndex);
 
   let finalColorList = []
   let finalUsersList = []
@@ -22,49 +22,22 @@ const LudoBoard = ({ users, turn, username, rollDice, turnStatus, usersDice }) =
     finalColorList = colorList
     finalUsersList = usersList
   }
-  console.log(finalColorList,finalUsersList,finalUsersList[1]&&turnStatus==='move',usersDice,turn,turnStatus);
-
   return (
     <>
     <div className='ludo'>
-        {/* <div>
-          {turnStatus}
-          {Object.keys(results).length?Object.keys(results):''}
-        </div> */}
 
     <div className="ludo-board-container">
-      <div className='board-cover'>
-
-        {finalUsersList[2] ? <div className={turn === finalUsersList[2] ? "players-details b-purple" : "players-details"}>
-          <div className={turn === finalUsersList[2]&&turnStatus==='move'?'dice-move':'dice-roll'}>{usersDice[finalUsersList[2]]}</div> {finalUsersList[2]}
-        </div> : ''}
-
-        {finalUsersList[3] ? <div className={turn === finalUsersList[3] ? "players-details b-purple" : "players-details"} style={{ justifyContent: 'end' }}>
-          {finalUsersList[3]}  <div className={turn === finalUsersList[3]&&turnStatus==='move'?'dice-move':'dice-roll'}>{usersDice[finalUsersList[3]]}</div>
-        </div> : ''}
-
-      </div>
       <div className="ludo-board">
 
-        <BigCube color={finalColorList[2]} />
+        <BigCube color={finalColorList[2]} position={0} user={finalUsersList[2]} />
         <CubesContainer color={finalColorList[3]} orientation={"top"} />
-        <BigCube color={finalColorList[3]} />
+        <BigCube color={finalColorList[3]} position={2} user={finalUsersList[3]}/>
         <CubesContainer color={finalColorList[2]} orientation={"left"} />
-        <div><div className="home-cube"></div></div>
+        <LudoHome finalColorList={finalColorList} />
         <CubesContainer color={finalColorList[0]} orientation={"right"} />
-        <BigCube color={finalColorList[1]} />
+        <BigCube color={finalColorList[1]} position={1} user={finalUsersList[1]}/>
         <CubesContainer color={finalColorList[1]} orientation={"down"} />
-        <BigCube color={finalColorList[0]} />
-
-      </div>
-      <div className='board-cover'>
-        {finalUsersList[1] ? <div className={turn === finalUsersList[1] ? "players-details b-purple" : "players-details"}>
-          <div className={turn === finalUsersList[1]&&turnStatus==='move'?'dice-move':'dice-roll'}>{usersDice[finalUsersList[1]]}</div> {finalUsersList[1]}
-        </div> : ''}
-
-        {finalUsersList[0] ? <div className={turn === finalUsersList[0] ? "players-details b-purple" : "players-details"} style={{ justifyContent: 'end' }}>
-          {finalUsersList[0]} <div onClick={rollDice} className={turn === finalUsersList[0]&&turnStatus==='move'?'dice-move':'dice-roll'}>{usersDice[finalUsersList[0]]}</div>
-        </div> : ''}
+        <BigCube color={finalColorList[0]} position={3} user={finalUsersList[0]}/>
 
       </div>
 

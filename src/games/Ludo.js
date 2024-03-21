@@ -8,6 +8,7 @@ import LudoBoard from '../components/LudoBoard'
 import Waiting from '../components/Waiting';
 import InitialDisplay from '../components/InitialDisplay';
 import Invites from '../components/Invites';
+import Results from '../components/Results';
 
 const Ludo = ({username}) => {
 
@@ -182,8 +183,7 @@ const Ludo = ({username}) => {
     }
   }
   const handleCubeClick = (id) => {
-    console.log('you clicked ', id, gameColorCode, turnStatus, boardState[id].findIndex((pawn) => pawn[0] === gameColorCode));
-    if (turnStatus == 'move' && boardState[id].findIndex((pawn) => pawn[0] === gameColorCode) !== -1) {
+    if (turn===username && turnStatus == 'move' && boardState[id].findIndex((pawn) => pawn[0] === gameColorCode) !== -1) {
       if (id[1] !== 'i') {
         move(id)
       } else if (id[1] === 'i') {
@@ -203,7 +203,6 @@ const Ludo = ({username}) => {
 
    }
   const takeOut = (id) => {
-    console.log(id,'iiiiiiiiiiiiiiiiiiiiyyyyyyyyyyyyyyyyy');
     if (dice.value === 6) {
       update(ref(db), {
         ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + boardState[id].find((pawn) => pawn[0] === gameColorCode)[1]]: gameColorCode + 'a2',
@@ -501,7 +500,7 @@ const Ludo = ({username}) => {
     } else if(newPositionIndex===56) {
       if (finalPawns[username] === 3) {
         update(ref(db), {
-          ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: (gameColorCode + 'f' + pawnCode[1]),
+          ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: (gameColorCode + 'fa'),
           ['ludo/games/' + gameID + '/turn']: nextUser(username),
           ['ludo/games/' + gameID + '/turnStatus']: 'roll',
           ['ludo/games/' + gameID + '/finalPawns/' + username]: finalPawns[username] + 1,
@@ -509,7 +508,7 @@ const Ludo = ({username}) => {
         })
       } else {
         update(ref(db), {
-          ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: (gameColorCode + 'f' + pawnCode[1]),
+          ['ludo/games/' + gameID + '/gameState/' + gameColorCode + '/' + pawnCode[1]]: (gameColorCode + 'fa'),
           ['ludo/games/' + gameID + '/turnStatus']: 'roll',
           ['ludo/games/' + gameID + '/finalPawns/' + username]: finalPawns[username] + 1
         })
@@ -674,7 +673,6 @@ const Ludo = ({username}) => {
 
   useEffect(() => { 
     if (dice.value && turnStatus === 'roll' && dice.from ) {
-      console.log(initialPawns[username],finalPawns[username]);
       if (initialPawns[username] + finalPawns[username] === 4 && finalPawns[username] !== 4) {
         takeOut(Object.values(gameState[gameColorCode]).find(position=>position[1]==='i'))
         update(ref(db), {
@@ -701,10 +699,8 @@ const Ludo = ({username}) => {
     if (gameID) {
       onValue(ref(db, 'ludo/games/' + gameID), (snapshot) => {
         const data = snapshot.val();
-        console.log(data);
         if (data) {
           if (data.status == 'finished') {
-            console.log('djgfyudhgfyuid ', data.users, gameID, invites);
             let updates = {}
             updates['ludo/users/' + username + '/gameID'] = null
             Object.keys(data.users).filter((user) => data.users[user] === 'invited').forEach((user) => {
@@ -767,14 +763,53 @@ const Ludo = ({username}) => {
 
   return (
     <>
-    <stateContext.Provider value={{ boardState, setBoardState, handleCubeClick }}>
+    <stateContext.Provider value={{ 
+      boardState, 
+      setBoardState, 
+      handleCubeClick, 
+      gameColorCode, 
+      isMove :(turn===username&& turnStatus==='move'),
+      dice,
+      setDice,
+      usersDice,
+      users,
+      gameID,
+      invites,
+      initialPawns,
+      finalPawns,
+      turn,
+      turnStatus,
+      results,
+      gameState,
+      username,
+      rollDice,
+      usersRef,
+      setStatus,
+      setUsers,
+      setGameID,
+      setInvites,
+      setResults,
+      setPreResult,
+      setUsersDice,
+      setInitialPawns,
+      setFinalPawns,
+      setTurn,
+      setTurnStatus,
+      setGameState,
+      setGameColorCode,
+      setDice,
+      setBoardState
+      }}>
     {status!=='active' && Object.keys(invites).length > 0?<Invites invites={invites} username={username} />:''}
 
     {status===''||status==='finished'?<InitialDisplay username={username} results={results} preResult={preResult} />:''}
 
+    {preResult.length?<Results preResult={preResult} />:''}
+
     {status==='waiting'?<Waiting gameID={gameID} users={users} username={username} />:''}
 
     {status==='active'?<LudoBoard users={users} turn={turn} username={username} rollDice={rollDice} turnStatus={turnStatus} usersDice={usersDice} />:''}
+    
     </stateContext.Provider>
     </>
   )

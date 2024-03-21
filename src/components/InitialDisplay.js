@@ -1,10 +1,10 @@
 import React from 'react'
 import { ref, set } from "firebase/database";
 import { db } from "../config/firebase";
+import Results from './Results';
 
 const InitialDisplay = ({
-    username,
-    preResult
+    username
 }) => {
     const createNewGame = () => {
         set(ref(db, 'ludo/games/' + username), {
@@ -61,15 +61,8 @@ const InitialDisplay = ({
     return (
         <div>
         <div className='initial-display'>
-            <button onClick={createNewGame}>Start new game</button>
+            <button className='start-new-game-btn' onClick={createNewGame}>Start new game</button>
         </div>
-        <br />
-        {preResult.map((user,index)=>(
-            <div key={index}>
-                {index+1}: {user}
-                <br />
-            </div>
-        ))}
         </div>
     )
 }

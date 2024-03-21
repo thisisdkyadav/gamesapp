@@ -7,11 +7,34 @@ import Navbar from '../components/Navbar';
 
 
 
-const Authenticate = ({ authStatus,setAuthStatus }) => {
+const Authenticate = ({ authStatus, setAuthStatus }) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+
+  const getErrorMessageForUser = (errorCode) => {
+    switch (errorCode) {
+      case 'auth/invalid-email':
+        return 'Invalid email address. Please check and try again.';
+      case 'auth/user-disabled':
+        return 'Your account has been disabled. Please contact support.';
+      case 'auth/wrong-password':
+        return 'Incorrect password. Please try again or reset your password.';
+      case 'auth/user-not-found':
+        return 'No account found with this email address. Please sign up.';
+      case 'auth/email-already-in-use':
+        return 'This email address is already in use. Please try a different one.';
+      case 'auth/weak-password':
+        return 'Password is too weak. Please choose a stronger password.';
+      case 'auth/invalid-email':
+        return 'Invalid email address. Please check and try again.';
+      // Add more cases for other error codes as needed
+      // Add more cases for other error codes as needed
+      default:
+        return 'An error occurred. Please try again later.';
+    }
+  };
 
   const login = async () => {
     setAuthStatus('loading')
@@ -19,22 +42,24 @@ const Authenticate = ({ authStatus,setAuthStatus }) => {
       .then((userCredential) => {
         // setUsername(userCredential.user)
       }).catch((error) => {
-        setMessage(error.message);
+        setMessage(getErrorMessageForUser(error.code));
+        setAuthStatus('error')
       });
   };
 
   const signup = () => {
-    console.log('clicked signup');
     setAuthStatus('loading')
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         sendEmailVerification(userCredential.user)
-        .then(() => {
-        }).catch((error) => {});
+          .then(() => {
+          }).catch((error) => { });
 
       })
       .catch((error) => {
-        setMessage(error.message);
+        setMessage(getErrorMessageForUser(error.code));
+        setAuthStatus('error')
+        
       });
   }
 
@@ -48,7 +73,7 @@ const Authenticate = ({ authStatus,setAuthStatus }) => {
 
     <>
 
-    <Navbar />
+      <Navbar />
       <div className="login-body">
         <div className="login-form-div">
           {authStatus !== 'verify' ? (
