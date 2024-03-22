@@ -1,16 +1,19 @@
 import React from 'react'
 import {  db } from "../config/firebase";
 import { ref, onValue, update } from "firebase/database";
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext  } from 'react';
 import '../css/ludo.css';
 import { stateContext } from '../context/context'
+import { appContext } from '../context/appContext';
 import LudoBoard from '../components/LudoBoard'
 import Waiting from '../components/Waiting';
 import InitialDisplay from '../components/InitialDisplay';
 import Invites from '../components/Invites';
 import Results from '../components/Results';
 
-const Ludo = ({username}) => {
+const Ludo = () => {
+
+  const { setappStatus, username } = useContext(appContext)
 
   
   let colorCodeList = ['r', 'g', 'y', 'b']
@@ -531,14 +534,19 @@ const Ludo = ({username}) => {
       onValue(ref(db, 'ludo/users/' + username), (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          setGameID(data.gameID)
+          if (data.gameID) {
+            setGameID(data.gameID)
+          } else {
+            setGameID(null)
+            setStatus('ludo-no-game')
+          }
           if (data.invites) {
             setInvites(data.invites)
           } else { setInvites({}) }
         } else {
           setGameID(null)
           setInvites({})
-
+          setStatus('ludo-no-game')
         }
       });
 
@@ -722,13 +730,12 @@ const Ludo = ({username}) => {
         } else {
           update(ref(db), {
             ['ludo/users/' + username + '/gameID']: null
-
+            
           })
         }
       });
     } else {
       // setUsers({})
-      setStatus('')
     }
 
   }, [gameID])
@@ -758,6 +765,30 @@ const Ludo = ({username}) => {
     }
   
   }, [results])
+
+  useEffect(() => {
+    switch (status) {
+      case 'ludo-no-game':
+        setappStatus('ludo-initial')
+        break;
+      case 'waiting':
+        setappStatus('ludo-waiting')
+        break;
+      case 'active':
+        setappStatus('ludo-active')
+        break;
+      case 'finished':
+        setappStatus('ludo-finished')
+        break;
+      case '':
+        setappStatus('loading')
+        break;
+      default:
+        setappStatus('ludo-defult')
+        break;
+    }
+
+  }, [status])
 
 
 
@@ -802,7 +833,7 @@ const Ludo = ({username}) => {
       }}>
     {status!=='active' && Object.keys(invites).length > 0?<Invites invites={invites} username={username} />:''}
 
-    {status===''||status==='finished'?<InitialDisplay username={username} results={results} preResult={preResult} />:''}
+    {['', 'finished', 'ludo-no-game'].includes(status)?<InitialDisplay username={username} results={results} preResult={preResult} />:''}
 
     {preResult.length?<Results preResult={preResult} />:''}
 

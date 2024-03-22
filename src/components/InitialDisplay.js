@@ -3,9 +3,8 @@ import { ref, set } from "firebase/database";
 import { db } from "../config/firebase";
 import Results from './Results';
 
-const InitialDisplay = ({
-    username
-}) => {
+const InitialDisplay = ({username, invites}) => {
+
     const createNewGame = () => {
         set(ref(db, 'ludo/games/' + username), {
             users: {
@@ -50,7 +49,6 @@ const InitialDisplay = ({
         })
             .then(() => {
                 set(ref(db, 'ludo/users/' + username), {
-                    invites: null,
                     gameID: username
                 });
             })

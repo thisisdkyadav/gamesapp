@@ -2,11 +2,18 @@ import React from 'react'
 import BigCube from './BigCube';
 import CubesContainer from './CubesContainer';
 import LudoHome from './LudoHome';
+import { useContext } from 'react';
+import { appContext } from '../context/appContext';
 
-const LudoBoard = ({ users, turn, username, rollDice, turnStatus, usersDice }) => {
+
+const LudoBoard = ({ users}) => {
+
+  const { setappStatus, username } = useContext(appContext)
 
   let colorList = ['red', 'green', 'yellow', 'blue']
   let usersList = Object.keys(users)
+  
+  setappStatus('playing-ludo');
 
   let userIndex = usersList.indexOf(username)
 

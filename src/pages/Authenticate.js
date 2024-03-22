@@ -30,7 +30,6 @@ const Authenticate = ({ authStatus, setAuthStatus }) => {
       case 'auth/invalid-email':
         return 'Invalid email address. Please check and try again.';
       // Add more cases for other error codes as needed
-      // Add more cases for other error codes as needed
       default:
         return 'An error occurred. Please try again later.';
     }

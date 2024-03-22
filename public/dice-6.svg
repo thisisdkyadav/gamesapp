@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path d="M40 0C45.5236 0 50 4.47639 50 10L50 40C50 45.5236 45.5236 50 40 50L10 50C4.47639 50 0 45.5236 0 40L0 10C0 4.47639 4.47639 0 10 0L40 0Z" id="path_1" />
+    <clipPath id="clip_1">
+      <use xlink:href="#path_1" clip-rule="evenodd" fill-rule="evenodd" />
+    </clipPath>
+  </defs>
+  <g id="dice-6">
+    <path d="M40 0C45.5236 0 50 4.47639 50 10L50 40C50 45.5236 45.5236 50 40 50L10 50C4.47639 50 0 45.5236 0 40L0 10C0 4.47639 4.47639 0 10 0L40 0Z" id="dice-6" fill="#FFFFFF" fill-opacity="0" stroke="none" />
+    <path d="M10 12.5C10 10.0147 12.0147 8 14.5 8C16.9853 8 19 10.0147 19 12.5C19 14.9853 16.9853 17 14.5 17C12.0147 17 10 14.9853 10 12.5Z" id="Oval" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M30 12.5C30 10.0147 32.0147 8 34.5 8C36.9853 8 39 10.0147 39 12.5C39 14.9853 36.9853 17 34.5 17C32.0147 17 30 14.9853 30 12.5Z" id="Oval-2" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M10 25C10 22.5147 12.0147 20.5 14.5 20.5C16.9853 20.5 19 22.5147 19 25C19 27.4853 16.9853 29.5 14.5 29.5C12.0147 29.5 10 27.4853 10 25Z" id="Oval-5" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M30 25C30 22.5147 32.0147 20.5 34.5 20.5C36.9853 20.5 39 22.5147 39 25C39 27.4853 36.9853 29.5 34.5 29.5C32.0147 29.5 30 27.4853 30 25Z" id="Oval-6" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M10 36.5C10 34.0147 12.0147 32 14.5 32C16.9853 32 19 34.0147 19 36.5C19 38.9853 16.9853 41 14.5 41C12.0147 41 10 38.9853 10 36.5Z" id="Oval-4" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M30 36.5C30 34.0147 32.0147 32 34.5 32C36.9853 32 39 34.0147 39 36.5C39 38.9853 36.9853 41 34.5 41C32.0147 41 30 38.9853 30 36.5Z" id="Oval-3" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+  </g>
+</svg>

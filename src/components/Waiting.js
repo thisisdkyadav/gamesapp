@@ -66,7 +66,7 @@ const Waiting = ({
           return (
             <>
               <div className={username===gameID?'grid-c1':'grid-c12'} key={index}>({users[user]}){user.replace(/\_/g, '.')}</div>
-              {username===gameID?<div data-user={user} data-status={users[user]} className='grid-c2' onClick={removeUser}>-</div>:''}
+              {username===gameID||username===user?<div data-user={user} data-status={users[user]} className='grid-c2' onClick={removeUser}>-</div>:''}
             </>)
         })
         }

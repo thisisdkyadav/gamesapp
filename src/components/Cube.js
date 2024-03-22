@@ -25,7 +25,7 @@ const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSize
   
   return (
     <>
-    <div id={id} onClick={()=>gbl.handleCubeClick(id)} className={`${home?'home-cube-div':'cube'} b-${color} ${ isStar ?'star':''} ${color}-hover`} >
+    <div id={id} onClick={()=>gbl.handleCubeClick(id)} className={`${home?'home-cube-div':'cube'} b-${color} ${ isStar ?`${color[0]}c-star`:''} ${color}-hover`} >
       
     {noOfPawns > 0 &&
         pawns.map((pawn, index) => {

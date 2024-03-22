@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path d="M40 0C45.5236 0 50 4.4764 50 10L50 40C50 45.5236 45.5236 50 40 50L10 50C4.4764 50 0 45.5236 0 40L0 10C0 4.4764 4.4764 0 10 0L40 0Z" id="path_1" />
+    <clipPath id="clip_1">
+      <use xlink:href="#path_1" clip-rule="evenodd" fill-rule="evenodd" />
+    </clipPath>
+  </defs>
+  <g id="dice-3">
+    <path d="M40 0C45.5236 0 50 4.4764 50 10L50 40C50 45.5236 45.5236 50 40 50L10 50C4.4764 50 0 45.5236 0 40L0 10C0 4.4764 4.4764 0 10 0L40 0Z" id="dice-3" fill="#FFFFFF" fill-opacity="0" stroke="none" />
+    <path d="M8 13.5C8 10.4624 10.4624 8 13.5 8C16.5376 8 19 10.4624 19 13.5C19 16.5376 16.5376 19 13.5 19C10.4624 19 8 16.5376 8 13.5Z" id="Oval" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M19.5 25C19.5 21.9624 21.9624 19.5 25 19.5C28.0376 19.5 30.5 21.9624 30.5 25C30.5 28.0376 28.0376 30.5 25 30.5C21.9624 30.5 19.5 28.0376 19.5 25Z" id="Oval-4" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+    <path d="M31 36.5C31 33.4624 33.4624 31 36.5 31C39.5376 31 42 33.4624 42 36.5C42 39.5376 39.5376 42 36.5 42C33.4624 42 31 39.5376 31 36.5Z" id="Oval-3" fill="#000000" fill-rule="evenodd" stroke="none" clip-path="url(#clip_1)" />
+  </g>
+</svg>
