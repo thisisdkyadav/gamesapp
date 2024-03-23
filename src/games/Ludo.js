@@ -3,22 +3,23 @@ import {  db } from "../config/firebase";
 import { ref, onValue, update } from "firebase/database";
 import { useEffect, useState, useRef, useContext  } from 'react';
 import '../css/ludo.css';
-import { stateContext } from '../context/context'
-import { appContext } from '../context/appContext';
-import LudoBoard from '../components/LudoBoard'
-import Waiting from '../components/Waiting';
-import InitialDisplay from '../components/InitialDisplay';
-import Invites from '../components/Invites';
-import Results from '../components/Results';
+import { ludoContext,appContext } from '../context/context'
+import LudoBoard from '../ludoComponents/LudoBoard'
+import Waiting from '../ludoComponents/Waiting';
+import InitialDisplay from '../ludoComponents/InitialDisplay';
+import Invites from '../ludoComponents/Invites';
+import Results from '../ludoComponents/Results';
+import Navbar from '../components/Navbar';
 
 const Ludo = () => {
 
-  const { setappStatus, username } = useContext(appContext)
+  const { setappStatus, username, user } = useContext(appContext)
 
   
   let colorCodeList = ['r', 'g', 'y', 'b']
 
   const [gameID, setGameID] = useState(null)
+  const [showBoard, setShowBoard] = useState(false)
   const [users, setUsers] = useState({})
   const [status, setStatus] = useState('')
   const [invites, setInvites] = useState({})
@@ -519,6 +520,23 @@ const Ludo = () => {
     }
   }
 
+const exitGame = () => { 
+  // let updates = {
+  //   ['ludo/users/' + username + '/gameID']: null,
+  //   ['ludo/games/' + gameID + '/users/' + username]: null,
+  //   ['ludo/games/' + gameID + '/invites/' + username]: null
+  // }
+  // update(ref(db), updates)
+ }
+
+const resumeGame = () => { 
+  if (gameID) {
+    setShowBoard(true)
+  } else {
+    setStatus('ludo-no-game')
+  }
+ }
+
 
   useEffect(() => {
     if (users) {
@@ -794,54 +812,32 @@ const Ludo = () => {
 
   return (
     <>
-    <stateContext.Provider value={{ 
+    
+    <Navbar user={user} exit={status==='active'?exitGame:null} />
+    <div className="main">
+    <ludoContext.Provider value={{ 
       boardState, 
       setBoardState, 
       handleCubeClick, 
       gameColorCode, 
       isMove :(turn===username&& turnStatus==='move'),
-      dice,
-      setDice,
       usersDice,
-      users,
-      gameID,
-      invites,
-      initialPawns,
-      finalPawns,
       turn,
       turnStatus,
-      results,
-      gameState,
-      username,
       rollDice,
-      usersRef,
-      setStatus,
-      setUsers,
-      setGameID,
-      setInvites,
-      setResults,
-      setPreResult,
-      setUsersDice,
-      setInitialPawns,
-      setFinalPawns,
-      setTurn,
-      setTurnStatus,
-      setGameState,
-      setGameColorCode,
-      setDice,
-      setBoardState
       }}>
     {status!=='active' && Object.keys(invites).length > 0?<Invites invites={invites} username={username} />:''}
 
-    {['', 'finished', 'ludo-no-game'].includes(status)?<InitialDisplay username={username} results={results} preResult={preResult} />:''}
+    {['', 'finished', 'ludo-no-game','active'].includes(status)?<InitialDisplay username={username} status={status } resumeGame={resumeGame} />:''}
 
     {preResult.length?<Results preResult={preResult} />:''}
 
     {status==='waiting'?<Waiting gameID={gameID} users={users} username={username} />:''}
 
-    {status==='active'?<LudoBoard users={users} turn={turn} username={username} rollDice={rollDice} turnStatus={turnStatus} usersDice={usersDice} />:''}
+    {showBoard?<LudoBoard users={users} turn={turn} username={username} rollDice={rollDice} turnStatus={turnStatus} usersDice={usersDice} />:''}
     
-    </stateContext.Provider>
+    </ludoContext.Provider>
+    </div>
     </>
   )
 }

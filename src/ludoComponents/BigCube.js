@@ -1,7 +1,7 @@
 import React from 'react'
 import Pawn from './Pawn'
 import { useEffect, useState, useContext } from 'react'
-import { stateContext } from '../context/context'
+import { ludoContext, appContext } from '../context/context'
 
 
 const BigCube = ({ color, position, user }) => {
@@ -14,9 +14,11 @@ const BigCube = ({ color, position, user }) => {
     handleCubeClick,
     usersDice,
     turn,
-    turnStatus,
-    username
-  } = useContext(stateContext)
+    turnStatus
+  } = useContext(ludoContext)
+
+  const { username } = useContext(appContext)
+
   const [colorCode, setColorCode] = useState(color[0])
   const [pawnList, setPawnList] = useState(['', '', '', ''])
 

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { db } from '../config/firebase';
 import { set, ref } from 'firebase/database';
 
-const Navbar = ({ user=auth.currentUser }) => {
+const Navbar = ({ user = auth.currentUser, exitGame }) => {
 
   const [showUserMenu, setShowUserMenu] = useState(false)
 
@@ -77,18 +77,16 @@ const Navbar = ({ user=auth.currentUser }) => {
     signOut(auth);
   }
 
-  // useEffect(() => {
-  //   if (user===null) {
-  //     user=auth.currentUser
-  //   }
-  // }, [])
-  
 
   return (
     <>
       <nav>
         <div className="nav-left">
           <img className='logo' src="logo.svg" alt="" />
+          <div className='game-menu'>
+            <div className="game-menu-item">Home</div>
+            {exitGame?<div onClick={exitGame} className="game-menu-item">Exit game</div>:''}
+          </div>
         </div>
 
 
@@ -98,18 +96,17 @@ const Navbar = ({ user=auth.currentUser }) => {
             {user ? user.displayName : ''}
           </div>
 
-          {user?<img onClick={()=>setShowUserMenu(!showUserMenu)} className="profile-image" src={user.photoURL?user.photoURL:'profile.svg'} />:''}
-          {/* <button onClick={setBoard}>set board</button> */}
+          {user ? <img onClick={() => setShowUserMenu(!showUserMenu)} className="profile-image" src={user.photoURL ? user.photoURL : 'profile.svg'} /> : ''}
 
         </div>
 
-        {showUserMenu&&user?<div className="userMenu">
-          <img src={user.photoURL?user.photoURL:'profile.svg'} alt="" />
+        {showUserMenu && user ? <div className="userMenu">
+          <img src={user.photoURL ? user.photoURL : 'profile.svg'} alt="" />
           <div className='displayName'>{user.displayName}</div>
           <div className='displayEmail'>{user.email}</div>
           <button className='btn-blue' onClick={logoutUser}>Logout</button>
 
-        </div>:''}
+        </div> : ''}
       </nav>
     </>
   )

@@ -5,8 +5,8 @@ import Home from './pages/Home';
 import { useEffect, useState } from 'react';
 import Authenticate from './pages/Authenticate';
 import VerifyEmail from './components/VerifyEmail';
-import Loading from './components/Loading'
-import { appContext } from './context/appContext'
+import Loading from './pages/Loading'
+import { appContext } from './context/context'
 
 function App() {
 
@@ -14,7 +14,6 @@ function App() {
   const [user, setUser] = useState(null)
   const [authStatus, setAuthStatus] = useState('initial')
   const [appStatus, setappStatus] = useState('opening')
-
 
 
   useEffect(() => {
@@ -50,12 +49,6 @@ function App() {
       case 'verify':
         setappStatus('email-not-verified')
         break;
-      // case 'error':
-      //   setappStatus('opened')
-      //   break;
-      // case 'loading':
-      //   setappStatus('opened')
-      //   break;
       default:
         setappStatus('default')
         break;
@@ -66,7 +59,7 @@ function App() {
 
 
   return (<>
-    <appContext.Provider value={{ setappStatus, appStatus, username }}>
+    <appContext.Provider value={{ setappStatus, appStatus, username, user }}>
       {['opening', 'loading'].includes(appStatus) ? <Loading /> : ''}
       {username !== '' ? <Home username={username} user={user} />
       :authStatus === 'verify' ? <VerifyEmail user={user} setUsername={setUsername} />

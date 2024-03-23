@@ -13,7 +13,7 @@ useEffect(() => {
   }, 100);
   return () => clearInterval(interval);
 }, []);
-
+  
   return (
     <div className="loading-container">
         <img src="logo.svg" alt="" />

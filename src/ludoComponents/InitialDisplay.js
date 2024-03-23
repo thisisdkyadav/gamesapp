@@ -1,9 +1,8 @@
 import React from 'react'
 import { ref, set } from "firebase/database";
 import { db } from "../config/firebase";
-import Results from './Results';
 
-const InitialDisplay = ({username, invites}) => {
+const InitialDisplay = ({username, status, resumeGame}) => {
 
     const createNewGame = () => {
         set(ref(db, 'ludo/games/' + username), {
@@ -59,7 +58,9 @@ const InitialDisplay = ({username, invites}) => {
     return (
         <div>
         <div className='initial-display'>
-            <button className='start-new-game-btn' onClick={createNewGame}>Start new game</button>
+            {status==='active'?<button className='resume-game-btn' onClick={createNewGame}>Resume game</button>:''}
+            <br />
+            <button className='start-new-game-btn' onClick={resumeGame}>Start new game</button>
         </div>
         </div>
     )

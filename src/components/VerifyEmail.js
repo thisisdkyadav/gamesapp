@@ -1,6 +1,6 @@
 import React from 'react'
 import '../css/login.css'
-import { sendEmailVerification, handleActionCode } from 'firebase/auth'
+import { sendEmailVerification} from 'firebase/auth'
 import { useState, useEffect } from 'react'
 import { auth } from "../config/firebase";
 import Navbar from './Navbar';

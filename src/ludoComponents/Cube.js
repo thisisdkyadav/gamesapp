@@ -1,11 +1,12 @@
 import React from 'react'
 import Pawn from './Pawn'
 import { useContext, useEffect, useState } from 'react'
-import { stateContext } from '../context/context'
+import { ludoContext } from '../context/context'
 
 const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSizeRatio}) => {
 
-  const gbl = useContext(stateContext)
+  const { boardState, handleCubeClick, gameColorCode, isMove } = useContext(ludoContext)
+
   let colorObj = {
     r: 'red',
     g: 'green',
@@ -17,15 +18,15 @@ const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSize
    const [pawns, setPawns] = useState([])
 
   useEffect(() => {
-    if (gbl.boardState) {
-      setNoOfPawns(gbl.boardState[id].length);
-      setPawns(gbl.boardState[id]);
+    if (boardState) {
+      setNoOfPawns(boardState[id].length);
+      setPawns(boardState[id]);
     }
-  }, [gbl.boardState]);
+  }, [boardState]);
   
   return (
     <>
-    <div id={id} onClick={()=>gbl.handleCubeClick(id)} className={`${home?'home-cube-div':'cube'} b-${color} ${ isStar ?`${color[0]}c-star`:''} ${color}-hover`} >
+    <div id={id} onClick={()=>handleCubeClick(id)} className={`${home?'home-cube-div':'cube'} b-${color} ${ isStar ?`${color[0]}c-star`:''} ${color}-hover`} >
       
     {noOfPawns > 0 &&
         pawns.map((pawn, index) => {
@@ -37,7 +38,7 @@ const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSize
               width: (43 - noOfPawns*3 -4)*sizeRatio,
               height: (42 - noOfPawns*2 -5)*sizeRatio,
             }
-            if (pawn[0]===gbl.gameColorCode && gbl.isMove) {
+            if (pawn[0]===gameColorCode && isMove) {
               styles.width = styles.width*(10000**(1/styles.width))*sizeRatio
               styles.height = styles.height*(10000**(1/styles.width))*sizeRatio
               styles.left = (styles.left- 5)*sizeRatio
