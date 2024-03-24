@@ -23,10 +23,16 @@ const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSize
       setPawns(boardState[id]);
     }
   }, [boardState]);
+
+  const handleClick = (id) => { 
+    if (!home) {
+      handleCubeClick(id)
+    }
+   }
   
   return (
     <>
-    <div id={id} onClick={()=>handleCubeClick(id)} className={`${home?'home-cube-div':'cube'} b-${color} ${ isStar ?`${color[0]}c-star`:''} ${color}-hover`} >
+    <div id={id} onClick={()=>handleClick(id)} className={`${home?'home-cube-div':'cube'} b-${color} ${ isStar ?`${color[0]}c-star`:''} ${color}-hover`} >
       
     {noOfPawns > 0 &&
         pawns.map((pawn, index) => {

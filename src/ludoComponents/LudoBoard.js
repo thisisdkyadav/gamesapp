@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import { appContext } from '../context/context';
 
 
-const LudoBoard = ({ users}) => {
+const LudoBoard = ({ users, noOfUsers}) => {
 
   const { username } = useContext(appContext)
 
@@ -19,15 +19,32 @@ const LudoBoard = ({ users}) => {
   let finalColorList = []
   let finalUsersList = []
 
+  // usersList.forEach((user)=>{
+
+  // })
+
   if (userIndex !== -1) {
     for (let i = 0; i < 4; i++) {
-      finalColorList.push(colorList[(userIndex + i) % 4])
-      finalUsersList.push(usersList[(userIndex + i) % 4])
+      let shift = noOfUsers===2&&userIndex===1?1:0
+      let  color = colorList[(userIndex + i + shift) % 4]
+      finalColorList.push(color)
+      if (noOfUsers>2) {
+        let user  = usersList[(userIndex + i) % 4]
+        finalUsersList.push(user?user:'')
+      } else if(i===0||i===1) {
+        let user  = usersList[(userIndex + i) % noOfUsers]
+        finalUsersList.push(user)
+        finalUsersList.push('')
+      }
     }
   } else {
     finalColorList = colorList
     finalUsersList = usersList
   }
+
+  console.log(finalColorList,finalUsersList);
+
+
   return (
     <>
     <div className='ludo'>

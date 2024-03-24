@@ -13,7 +13,7 @@ const Waiting = ({
   const [message, setMessage] = useState('')
   const inputEmail = useRef()
   const startGame = () => {
-    if (Object.keys(users).filter(user => users[user] === 'joined').length == 4) {
+    if (Object.keys(users).filter(user => users[user] === 'joined').length > 1) {
       update(ref(db), {
         ['ludo/games/' + gameID + '/status']: 'active'
       })

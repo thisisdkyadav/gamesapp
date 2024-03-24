@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-// import { getAnalytics } from "firebase/analytics";
+import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,7 +13,8 @@ const firebaseConfig = {
   projectId: "games-ab96b",
   storageBucket: "games-ab96b.appspot.com",
   messagingSenderId: "50015386277",
-  appId: "1:50015386277:web:70377293a765beb3392b4c"
+  appId: "1:50015386277:web:70377293a765beb3392b4c",
+  measurementId: "G-QD4DQ8MGCJ"
 };
 
 // Initialize Firebase
@@ -22,13 +23,12 @@ export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
 export const db = getDatabase(app);
+const analytics = getAnalytics(app);
 
 // export const db = getFirestore(app);
 // export const storage = getStorage(app);
 
 
-
-// const analytics = getAnalytics(app);
 
 
 

@@ -14,7 +14,8 @@ const BigCube = ({ color, position, user }) => {
     handleCubeClick,
     usersDice,
     turn,
-    turnStatus
+    turnStatus,
+    colorsUser
   } = useContext(ludoContext)
 
   const { username } = useContext(appContext)
@@ -42,7 +43,7 @@ const BigCube = ({ color, position, user }) => {
       <div className={turn === user&&turnStatus==='move'?'big-cube-content show-move':turn === user&&turnStatus==='roll' ? "big-cube-content show-roll" : "big-cube-content"}>
         {pawnList.map((pawn, index) => (
           <div onClick={() => handleCubeClick(colorCode + 'i' + index)} key={colorCode + 'i' + index + '-' + index} id={colorCode + 'i' + index} className={`big-cube-circle b-${color} ${color}-hover`}>
-            {(pawn != '') && (pawn) && (<Pawn id={pawn} color={color} />)}
+            <Pawn id={pawn} color={color} />
           </div>
         ))}
       </div>

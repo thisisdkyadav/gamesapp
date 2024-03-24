@@ -13,7 +13,8 @@ const Invites = ({
         ['ludo/games/' + game + '/usersDice/' + username]: 0,
         ['ludo/games/' + game + '/initialPawns/' + username]: 4,
         ['ludo/games/' + game + '/finalPawns/' + username]: 0,
-        ['ludo/users/' + username+'/gameID']: game
+        ['ludo/users/' + username+'/gameID']: game,
+        ['ludo/users/' + username + '/invites/' + game]: null
       })
     }
     const rejectInvite = (game) => {

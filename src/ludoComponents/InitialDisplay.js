@@ -58,9 +58,9 @@ const InitialDisplay = ({username, status, resumeGame}) => {
     return (
         <div>
         <div className='initial-display'>
-            {status==='active'?<button className='resume-game-btn' onClick={createNewGame}>Resume game</button>:''}
+            {status==='active'?<button className='resume-game-btn' onClick={resumeGame}>Resume game</button>:''}
             <br />
-            <button className='start-new-game-btn' onClick={resumeGame}>Start new game</button>
+            <button className='start-new-game-btn' onClick={createNewGame}>Start new game</button>
         </div>
         </div>
     )
