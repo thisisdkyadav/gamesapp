@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { db } from '../config/firebase';
 import { set, ref } from 'firebase/database';
 
-const Navbar = ({ user = auth.currentUser, exitGame }) => {
+const Navbar = ({ user = auth.currentUser, exitGame, showHome }) => {
 
   const [showUserMenu, setShowUserMenu] = useState(false)
 
@@ -77,6 +77,14 @@ const Navbar = ({ user = auth.currentUser, exitGame }) => {
     signOut(auth);
   }
 
+  // const cancelExit = () => { 
+  //   setAlert({...alert, show:false, message:'', handleCancel:''})
+  //  }
+
+  // const exit = () => { 
+  //   setAlert({...alert, show:true, message:'Are you sure, you want to exit game', handleCancel:cancelExit, handleConfirm:exitGame})
+  //  }
+
 
   return (
     <>
@@ -84,7 +92,7 @@ const Navbar = ({ user = auth.currentUser, exitGame }) => {
         <div className="nav-left">
           <img className='logo' src="logo.svg" alt="" />
           <div className='game-menu'>
-            <div className="game-menu-item">Home</div>
+            <div onClick={showHome} className="game-menu-item">Home</div>
             {exitGame?<div onClick={exitGame} className="game-menu-item">Exit game</div>:''}
           </div>
         </div>

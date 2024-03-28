@@ -58,7 +58,7 @@ const Waiting = ({
 
   return (
     <div className='waiting'>
-      <div className='message'></div>{message}
+      <div className='message'>{message}</div>
       <div className="grid">
         <div><input placeholder="Email" ref={inputEmail} type="email" /></div>
         <div className='grid-c2' onClick={inviteUser}>+</div>

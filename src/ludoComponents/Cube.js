@@ -5,7 +5,7 @@ import { ludoContext } from '../context/context'
 
 const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSizeRatio}) => {
 
-  const { boardState, handleCubeClick, gameColorCode, isMove } = useContext(ludoContext)
+  const { boardState, handleCubeClick, gameColorCode, isMove, users, colorsUser } = useContext(ludoContext)
 
   let colorObj = {
     r: 'red',
@@ -57,6 +57,7 @@ const Cube = ({color, isStar=false,id,pawnsOnCube=0,home=false,sizeRatio,setSize
               // position={position}
               id={pawn}
               style={styles}
+              hide={users[colorsUser[pawn[0]]]==='leaved'}
             />
           )})}
 

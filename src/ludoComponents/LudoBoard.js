@@ -6,15 +6,19 @@ import { useContext } from 'react';
 import { appContext } from '../context/context';
 
 
-const LudoBoard = ({ users, noOfUsers}) => {
+const LudoBoard = ({ users }) => {
 
   const { username } = useContext(appContext)
+  let noOfUsers = Object.keys(users).length
 
   let colorList = ['red', 'green', 'yellow', 'blue']
   let usersList = Object.keys(users)
+  // let usersList = Object.keys(users).filter((user)=>users[user]!=='leaved')
   
 
   let userIndex = usersList.indexOf(username)
+
+  console.log(userIndex,usersList );
 
   let finalColorList = []
   let finalUsersList = []
@@ -42,7 +46,8 @@ const LudoBoard = ({ users, noOfUsers}) => {
     finalUsersList = usersList
   }
 
-  console.log(finalColorList,finalUsersList);
+  console.log(finalColorList,finalUsersList );
+
 
 
   return (

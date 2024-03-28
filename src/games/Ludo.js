@@ -11,14 +11,15 @@ import Invites from '../ludoComponents/Invites';
 import Results from '../ludoComponents/Results';
 import Navbar from '../components/Navbar';
 import ludoAI from '../ai/ludoAI';
+import Alert from '../components/Alert';
 
 const Ludo = () => {
 
   const { setappStatus, username, user } = useContext(appContext)
 
-  
+
   let tempState = {
-    hidden:[],
+    hidden: [],
 
     ri0: [],
     ri1: [],
@@ -134,7 +135,9 @@ const Ludo = () => {
 
   let colorCodeList = ['r', 'g', 'y', 'b']
 
+  const [popup, setPopup] = useState({show: false, message:'', handleCancel:null, handleConfirm:null, confirmText:'Continue', cancelText:'Cancel'})
   const [gameID, setGameID] = useState(null)
+  const [bots, setBots] = useState({})
   const [noOfUsers, setNoOfUsers] = useState(4)
   const [showBoard, setShowBoard] = useState(false)
   const [users, setUsers] = useState({})
@@ -149,12 +152,11 @@ const Ludo = () => {
   const [results, setResults] = useState({})
   const [preResult, setPreResult] = useState([])
   const [usersDice, setUsersDice] = useState({})
-  const [playBot, setPlayBot] = useState(false)
   const [colorsUser, setColorsUser] = useState({
-    r:null,
-    g:null,
-    y:null,
-    b:null
+    r: null,
+    g: null,
+    y: null,
+    b: null
   })
   const [gameState, setGameState] = useState({
     r: {
@@ -187,13 +189,19 @@ const Ludo = () => {
 
   const usersRef = useRef()
 
-  const runBot = (bot) => { 
-    let color = Object.keys(colorsUser).find((c)=>colorsUser[c]===bot)
-    let n = Math.floor(Math.random() * 6) + 1;
-    // let pawn = ludoAI(boardState, n, color, gameState, true)
-    move();
-   }
 
+  const runBot = (bot) => {
+
+    // wait for 3 sec
+    setTimeout(function () {
+
+      console.log('After delay');
+      let color = Object.keys(colorsUser).find((c) => colorsUser[c] === bot)
+      let n = Math.floor(Math.random() * 6) + 1;
+      // let pawn = ludoAI(boardState, n, color, gameState, true)
+      move(null, bot, color, 4, true);
+    }, 100);
+  }
   const rollDice = () => {
     if (turn === username) {
       if (turnStatus === 'roll') {
@@ -208,10 +216,9 @@ const Ludo = () => {
   }
   const nextUser = (toWhom) => {
     let tempUser = Object.keys(users)[(Object.keys(users).indexOf(toWhom) + 1) % Object.keys(users).length]
-    if (Object.keys(results).includes(tempUser)) {
+    if (Object.keys(results).includes(tempUser)||users[tempUser]==='leaved') {
       return nextUser(tempUser)
     } else {
-      if(users[tempUser==='bot']){runBot(tempUser)}
       return tempUser
     }
 
@@ -227,53 +234,60 @@ const Ludo = () => {
       }
     }
   }
-  const move = (id, username=username, color=gameColorCode, dice=dice, isBot=false) => {
-    let pawnCode = boardState[id].find((pawn) => pawn[0] === color)
-    const { movables, pawn } = ludoAI(boardState, dice.value, color, gameState,isBot, pawnCode)
+  const move = (id, user = username, color = gameColorCode, vdice = dice.value, isBot = false) => {
+    let pawnCode = isBot ? null : boardState[id].find((pawn) => pawn[0] === color)
+    console.log(vdice, color, isBot, pawnCode)
+    const { movables, pawn } = ludoAI(boardState, vdice, color, gameState, isBot, pawnCode)
+    console.log(pawn, movables);
 
-    
-    
     let updates = {}
 
+    if (isBot) {
+      updates['ludo/games/' + gameID + '/dice'] = dice.value
+      updates['ludo/games/' + gameID + '/usersDice/' + user] = vdice
+    }
+
     if (pawn.canMove) {
-      updates['ludo/games/' + gameID + '/gameState/' + color + '/' + pawnCode[1]] = pawn.newPositionID
+      updates['ludo/games/' + gameID + '/gameState/' + color + '/' + pawn.code[1]] = pawn.newPositionID
       updates['ludo/games/' + gameID + '/turnStatus'] = 'roll'
 
       let newPositionPawns = boardState[pawn.newPositionID]
 
       if (newPositionPawns.length && (![0, 8, 13, 21, 26, 34, 39, 47].includes(pawn.newPosition)) && newPositionPawns[0][0] !== color) {
-        
+
         let tempPawnUser = colorsUser[newPositionPawns[0][0]]
-        updates['ludo/games/' + gameID + '/initialPawns/' + tempPawnUser]= initialPawns[tempPawnUser] + newPositionPawns.length
+        updates['ludo/games/' + gameID + '/initialPawns/' + tempPawnUser] = initialPawns[tempPawnUser] + newPositionPawns.length
         newPositionPawns.forEach((pawn) => {
           updates['ludo/games/' + gameID + '/gameState/' + pawn[0] + '/' + pawn[1]] = pawn[0] + 'i' + ['a', 'b', 'c', 'd'].indexOf(pawn[1])
         })
-      } else if (pawn.newPosition===56) {
-        if (finalPawns[username]===3) {
-          updates['ludo/games/' + gameID + '/results/' + username]= Object.keys(results).length
-          updates['ludo/games/' + gameID + '/turn']= nextUser(username)
+      } else if (pawn.newPosition === 56) {
+        if (finalPawns[user] === 3) {
+          updates['ludo/games/' + gameID + '/results/' + user] = Object.keys(results).length
+          updates['ludo/games/' + gameID + '/turn'] = nextUser(user)
         }
-        updates['ludo/games/' + gameID + '/finalPawns/' + username]= finalPawns[username] + 1
-        
-      } else if (dice.value === 6&& pawn.newPosition===0) {
-        updates['ludo/games/' + gameID + '/initialPawns/' + username]= (initialPawns[username] - 1)
-      } else if(dice.value !== 6) {
-        updates['ludo/games/' + gameID + '/turn']= nextUser(username)
+        updates['ludo/games/' + gameID + '/finalPawns/' + user] = finalPawns[user] + 1
+
+      } else if (vdice === 6 && pawn.newPosition === 0) {
+        updates['ludo/games/' + gameID + '/initialPawns/' + user] = (initialPawns[user] - 1)
+      } else if (vdice !== 6) {
+        updates['ludo/games/' + gameID + '/turn'] = nextUser(user)
       }
 
-    } else if ((!movables) && dice.value!==6) {
-      updates['ludo/games/' + gameID + '/turn'] = nextUser(username)
+    } else if ((!movables) && vdice !== 6) {
+      updates['ludo/games/' + gameID + '/turn'] = nextUser(user)
     }
-
-    update(ref(db), updates);
+    
+    update(ref(db), updates)
 
   }
-  const makeMove = () => { 
-    
-   }
-
-
   const exitGame = () => {
+    setPopup({...popup, show:true, message:'Are you sure you want to exit game;', handleCancel:()=>setPopup({...popup,show:false}), handleConfirm:()=>{
+      let updates = {}
+      updates['ludo/users/' + username + '/gameID'] = null
+      updates['ludo/games/' + gameID + '/users/'+ username] = 'leaved'
+      update(ref(db), updates)
+      setPopup({...popup, show:false})
+    }})
   }
   const resumeGame = () => {
     if (gameID) {
@@ -282,26 +296,32 @@ const Ludo = () => {
       setStatus('ludo-no-game')
     }
   }
+  const showHome = () => { 
+      setPopup({...popup, show:true, message:'Are you sure you want to go Home?', handleCancel:()=>setPopup({...popup,show:false}), handleConfirm:()=>{
+        setPopup({...popup, show:false})
+        setShowBoard(false)
+      }})
+   }
 
 
   useEffect(() => {
     if (users) {
       let usersList = Object.keys(users)
-      if (usersList.length===2) {
-        setGameColorCode(colorCodeList[Object.keys(users).indexOf(username)*2])
-        setColorsUser({r: usersList[0], g:null, y: usersList[1], b:null})
-      } else{
+      if (usersList.length === 2) {
+        setGameColorCode(colorCodeList[Object.keys(users).indexOf(username) * 2])
+        setColorsUser({ r: usersList[0], g: null, y: usersList[1], b: null })
+      } else {
         setGameColorCode(colorCodeList[Object.keys(users).indexOf(username)])
-        let tempColorsUser = {r:null, g:null, y:null, b:null}
-        usersList.forEach((user, index)=>{
-          tempColorsUser[colorCodeList[index]]=user
+        let tempColorsUser = { r: null, g: null, y: null, b: null }
+        usersList.forEach((user, index) => {
+          tempColorsUser[colorCodeList[index]] = user
         })
         setColorsUser(tempColorsUser)
       }
 
       usersRef.current = users
-      setNoOfUsers(usersList.length)
-    } else{
+      setNoOfUsers(usersList.filter((user)=>users[user]!=='leaved').length)
+    } else {
       setNoOfUsers(4)
     }
 
@@ -349,17 +369,17 @@ const Ludo = () => {
     if (dice.value && turnStatus === 'roll' && dice.from) {
       let updates = {}
 
-      updates['ludo/games/' + gameID + '/dice']= dice.value
-      updates['ludo/games/' + gameID + '/usersDice/' + username]= dice.value
+      updates['ludo/games/' + gameID + '/dice'] = dice.value
+      updates['ludo/games/' + gameID + '/usersDice/' + username] = dice.value
 
       if (initialPawns[username] + finalPawns[username] === 4 && finalPawns[username] !== 4) {
         move(Object.values(gameState[gameColorCode]).find(position => position[1] === 'i'))
 
       } else if ((initialPawns[username] === 0 && finalPawns[username] === 3) || ((initialPawns[username] + finalPawns[username] === 3) && (dice.value !== 6))) {
         move(Object.values(gameState[gameColorCode]).find(position => position[1] !== 'i' && position[1] !== 'f'))
-        
+
       } else {
-        updates['ludo/games/' + gameID + '/turnStatus']= 'move'
+        updates['ludo/games/' + gameID + '/turnStatus'] = 'move'
       }
       update(ref(db), updates)
     }
@@ -388,6 +408,7 @@ const Ludo = () => {
           setInitialPawns(data.initialPawns)
           setFinalPawns(data.finalPawns)
           data.results ? setResults(data.results) : setResults({})
+          data.bots ? setBots(data.bots) : setBots({})
 
         } else {
           update(ref(db), {
@@ -397,29 +418,40 @@ const Ludo = () => {
       });
     } else {
       // setUsers({})
+      setShowBoard(false)
     }
 
   }, [gameID])
 
   useEffect(() => {
-    if (Object.keys(results).length === noOfUsers-1 && Object.keys(results).length) {
+    let botsList = Object.keys(bots)
+    setTimeout(() => {
+    if (botsList.length && botsList.includes(turn) && bots[turn]===username) {
+      runBot(turn)
+    }
+    }, 1500);
+  }, [bots])
+  
+  useEffect(() => {
+    if (Object.keys(results).length === noOfUsers - 1 && Object.keys(results).length) {
       let resultsCopy = { ...results }
       let gameIDCopy = gameID
-      let usersCopy = Object.keys({ ...users })
-      usersCopy.forEach((user) => {
-        if (!Object.keys(resultsCopy).includes(user)) {
-          resultsCopy[user] = noOfUsers-1
+      let usersCopy = { ...users }
+      let usersList = Object.keys(usersCopy)
+      usersList.forEach((user) => {
+        if (!Object.keys(resultsCopy).includes(user)&&usersCopy[user]!=='leaved') {
+          resultsCopy[user] = noOfUsers - 1
         }
       })
       let resultList = []
       console.log(resultsCopy);
       for (let i = 0; i < Object.keys(resultsCopy).length; i++) {
         resultList.push(Object.keys(resultsCopy).find(user => resultsCopy[user] === i))
-        
-        
+
+
       }
       setPreResult(resultList)
-      
+
       if (gameIDCopy) {
         update(ref(db), {
           ['ludo/games/' + gameIDCopy + '/status']: 'finished'
@@ -428,15 +460,7 @@ const Ludo = () => {
     }
 
   }, [results])
-
-  useEffect(() => {
-    if (0) {
-      let n = Math.floor(Math.random() * 6) + 1;
-      let pawn = ludoAI(boardState, n, ccc, gameState, true)
-    }
-  }, [playBot])
   
-
   useEffect(() => {
     switch (status) {
       case 'ludo-no-game':
@@ -453,6 +477,9 @@ const Ludo = () => {
         setShowBoard(false)
         setappStatus('ludo-finished')
         break;
+      case 'loading':
+        setappStatus('loading')
+        break;
       case '':
         setappStatus('loading')
         break;
@@ -463,12 +490,15 @@ const Ludo = () => {
 
   }, [status])
 
-console.log(gameColorCode);
+  console.log(noOfUsers);
+  console.log(colorsUser,gameColorCode);
+  
+
 
   return (
     <>
-
-      <Navbar user={user} exit={status === 'active' ? exitGame : null} />
+      {popup.show?<Alert data={popup} />:''}
+      <Navbar user={user} exitGame={status === 'active' ? exitGame : null} showHome={showHome} />
       <div className="main">
         <ludoContext.Provider value={{
           boardState,
@@ -480,7 +510,8 @@ console.log(gameColorCode);
           turn,
           turnStatus,
           rollDice,
-          colorsUser
+          colorsUser,
+          users
         }}>
           {status !== 'active' && Object.keys(invites).length > 0 ? <Invites invites={invites} username={username} /> : ''}
 

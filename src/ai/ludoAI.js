@@ -254,7 +254,7 @@ class Pawn {
     this.code = code;
     this.color = color;
     this.positionID = positionID;
-    this.position =  paths[color].indexOf(this.position);
+    this.position =  paths[color].indexOf(this.positionID);
     this.newPosition = this.position > -1 ? this.position + dice : dice===6?0:this.position;
     this.newPositionID = this.newPosition>-1 && this.newPosition<57?paths[color][this.newPosition]:color+'i'+pawnList[code[1]];
     this.canMove = this.checkIfCanMove(dice);
@@ -285,7 +285,7 @@ const ludoAI = (boardState, dice, color, gameState, isBot=false, pawnRequired=nu
   // }
 
   pawnList.forEach((code)=>{
-    paths[color + code]=new Pawn(color, gameState[color][code], dice, color + code)
+    pawns[color + code]=new Pawn(color, gameState[color][code], dice, color + code)
   })
 
   for (let i = 0; i < Object.keys(pawns).length; i++) {
@@ -298,19 +298,21 @@ const ludoAI = (boardState, dice, color, gameState, isBot=false, pawnRequired=nu
     let newCube = boardState[pawn.newPositionID]
 
     if (newCube.length && newCube[0][0] !== color && ![0, 8, 13, 21, 26, 34, 39, 47].includes(pawn.newPosition)) {
-      pawns.willMove += 1000000 * newCube.length;
+      pawn.willMove += 1000000 * newCube.length;
     }
 
     if (pawn.newPosition === 0) {
-      pawns.willMove += 100000;
+      console.log('dfdfdfdfdfdfdfdfd');
+      
+      pawn.willMove += 100000;
     } else if (pawn.newPosition === 56) {
-      pawns.willMove += 10000;
+      pawn.willMove += 10000;
     } else if (pawn.newPosition < 56 && pawn.newPosition > 50) {
-      pawns.willMove += 1000;
+      pawn.willMove += 1000;
     }
 
     if ([0, 8, 13, 21, 26, 34, 39, 47].includes(pawn.newPosition)) {
-      pawns.willMove += 100;
+      pawn.willMove += 100;
     } else {
       let danger = 0
       for (let i = 1; i < 7; i++) {
@@ -319,12 +321,12 @@ const ludoAI = (boardState, dice, color, gameState, isBot=false, pawnRequired=nu
           danger += boardState[path[pawn.newPosition - i]].length;
         }
       }
-      pawns.willMove += 2 - danger;
+      pawn.willMove += 2 - danger;
     }
 
   }
 
-  let max = 0;
+  let max = -500;
   let maxPawn = null;
   for (let i = 0; i < Object.keys(pawns).length; i++) {
     const pawn = Object.values(pawns)[i];
@@ -333,9 +335,9 @@ const ludoAI = (boardState, dice, color, gameState, isBot=false, pawnRequired=nu
       maxPawn = pawn;
     }
   }
-
+  console.log(pawns);
   if (isBot) {
-    return {movables:Object.values(pawns).filter((pawn)=>pawn.canMove).length,pawn:maxPawn?maxPawn:null}
+    return {movables:Object.values(pawns).filter((pawn)=>pawn.canMove).length,pawn:maxPawn?maxPawn:{canMove:false}}
     // return {pawn:maxPawn.code, newPosition:path[maxPawn.newPosition], canMove:maxPawn.canMove}
   } else {
     return {movables:Object.values(pawns).filter((pawn)=>pawn.canMove).length, pawn:pawns[pawnRequired]}

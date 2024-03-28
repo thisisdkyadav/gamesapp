@@ -15,7 +15,7 @@ const BigCube = ({ color, position, user }) => {
     usersDice,
     turn,
     turnStatus,
-    colorsUser
+    users
   } = useContext(ludoContext)
 
   const { username } = useContext(appContext)
@@ -37,13 +37,13 @@ const BigCube = ({ color, position, user }) => {
 
   return (
     <div className="big-cube" style={{ backgroundColor: `var(--${color})` }}>
-      {user ? <><div className={`player-details ${orientation[(position + 2) % 4]} ${color}-hover`}>{user.replace(/\_/g,'.')}</div>
+      {user ? <><div className={`player-details ${orientation[(position + 2) % 4]} ${color}-hover`}>{users[user]==='joined'?user.replace(/\_/g,'.'):users[user]}</div>
          <div onClick={user===username?rollDice:null} className={`dice ${orientation[position]} ${color}-hover`}><img src={`dice-${usersDice[user]}.svg`} alt="" /></div>
       </> : ''}
       <div className={turn === user&&turnStatus==='move'?'big-cube-content show-move':turn === user&&turnStatus==='roll' ? "big-cube-content show-roll" : "big-cube-content"}>
         {pawnList.map((pawn, index) => (
           <div onClick={() => handleCubeClick(colorCode + 'i' + index)} key={colorCode + 'i' + index + '-' + index} id={colorCode + 'i' + index} className={`big-cube-circle b-${color} ${color}-hover`}>
-            <Pawn id={pawn} color={color} />
+            <Pawn id={pawn} color={color} hide={users[user]==='leaved'} />
           </div>
         ))}
       </div>
