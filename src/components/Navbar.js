@@ -77,14 +77,6 @@ const Navbar = ({ user = auth.currentUser, exitGame, showHome }) => {
     signOut(auth);
   }
 
-  // const cancelExit = () => { 
-  //   setAlert({...alert, show:false, message:'', handleCancel:''})
-  //  }
-
-  // const exit = () => { 
-  //   setAlert({...alert, show:true, message:'Are you sure, you want to exit game', handleCancel:cancelExit, handleConfirm:exitGame})
-  //  }
-
 
   return (
     <>
@@ -93,7 +85,11 @@ const Navbar = ({ user = auth.currentUser, exitGame, showHome }) => {
           <img className='logo' src="logo.svg" alt="" />
           <div className='game-menu'>
             <div onClick={showHome} className="game-menu-item">Home</div>
-            {exitGame?<div onClick={exitGame} className="game-menu-item">Exit game</div>:''}
+            {exitGame ? <div onClick={exitGame} className="game-menu-item">Exit game</div> : ''}
+          </div>
+          <div className='game-menu-down'>
+            <img onClick={showHome} className="game-menu-item-down" src="home.svg" alt="" />
+            {exitGame ? <img onClick={exitGame} className="game-menu-item-down" src="exit.svg" alt="" /> : ''}
           </div>
         </div>
 

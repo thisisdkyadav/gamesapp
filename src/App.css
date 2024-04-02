@@ -53,6 +53,20 @@ nav .game-menu-item{
     border-radius: calc(var(--size-ratio) * 5);
 }
 
+nav .game-menu-down{
+    display: none;
+    align-items: center;
+    justify-content: space-around;
+    position: absolute;
+    width: 100vw;
+    bottom: 0px;
+    left: 0;
+    background-color: #f3f9ff;
+    padding: 8px 8px;
+    border-radius: calc(var(--size-ratio) * 6);
+
+}
+
 .nav-right{
     height: 100%;
     display: flex;
@@ -232,11 +246,11 @@ nav .game-menu-item:hover{
 }
 
 @media (max-width: 600px) {
-    nav .game-menu{
+    /* nav .game-menu{
         position: absolute;
-        bottom: 5px;
-        left: 50%;
-        transform: translateX(-50%);
+        width: 100vw;
+        bottom: 0px;
+        left: 0;
         background-color: #f3f9ff;
         padding: 8px 8px;
         border-radius: calc(var(--size-ratio) * 6);
@@ -246,9 +260,19 @@ nav .game-menu-item:hover{
         padding: 5px 16px;
         font-size: 16px;
         min-width: fit-content;
-        /* font-size: calc(var(--size-ratio) * 16); */
-        background-color: var(--box-b-color);
-        /* padding: calc(var(--size-ratio) * 3) calc(var(--size-ratio) * 5); */
-        border-radius: calc(var(--size-ratio) * 5);
+        background-color: var(--box-b-color);border-radius: calc(var(--size-ratio) * 5);
+    } */
+
+    nav .game-menu{
+        display: none;
+    }
+    nav .game-menu-down{
+        display: flex;
+    }
+
+
+    .nav-right > .displayName {
+        display: none;
+        background-color: #fff;
     }
 }
