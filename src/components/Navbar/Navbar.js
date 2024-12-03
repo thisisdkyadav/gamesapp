@@ -1,13 +1,14 @@
-import React from 'react'
-import { auth } from "../config/firebase";
-import { signOut } from "firebase/auth";
-import { useState, useEffect } from 'react';
-import { db } from '../config/firebase';
-import { set, ref } from 'firebase/database';
+import React from "react"
+import { auth } from "../../config/firebase"
+import { signOut } from "firebase/auth"
+import { useState, useEffect } from "react"
+import { db } from "../../config/firebase"
+import { set, ref } from "firebase/database"
+import { useAuth } from "../../context/auth"
 
 const Navbar = ({ user = auth.currentUser, exitGame, showHome }) => {
-
   const [showUserMenu, setShowUserMenu] = useState(false)
+  const { setAppStatus } = useAuth()
 
   // const setBoard = () => {
   //   set(ref(db, 'ludo/games/' + username), {
@@ -46,13 +47,13 @@ const Navbar = ({ user = auth.currentUser, exitGame, showHome }) => {
   //     status: 'active',
   //     turn: 'awacxo@gmail_com',
   //     turnStatus: 'move',
-  //     finalPawns: { 
+  //     finalPawns: {
   //       'inak_45_in_8@gmail_com': 0,
   //       'deveshgilyav@gmail_com': 4,
   //       'awacxo@gmail_com': 3,
   //       'itsdeveshyadav@gmail_com': 4
   //      },
-  //     initialPawns: { 
+  //     initialPawns: {
   //       'inak_45_in_8@gmail_com': 4,
   //       'deveshgilyav@gmail_com': 0,
   //       'awacxo@gmail_com': 0,
@@ -74,43 +75,66 @@ const Navbar = ({ user = auth.currentUser, exitGame, showHome }) => {
 
   // }
   const logoutUser = () => {
-    signOut(auth);
+    signOut(auth)
   }
-
 
   return (
     <>
       <nav>
         <div className="nav-left">
-          <img className='logo' src="logo.svg" alt="" />
-          <div className='game-menu'>
-            <div onClick={showHome} className="game-menu-item">Home</div>
-            {exitGame ? <div onClick={exitGame} className="game-menu-item">Exit game</div> : ''}
+          <img className="logo" src="logo.svg" alt="" />
+          <div className="game-menu">
+            <div onClick={showHome} className="game-menu-item">
+              Home
+            </div>
+            {exitGame ? (
+              <div onClick={exitGame} className="game-menu-item">
+                Exit game
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-          <div className='game-menu-down'>
+          <div className="game-menu-down">
             <img onClick={showHome} className="game-menu-item-down" src="home.svg" alt="" />
-            {exitGame ? <img onClick={exitGame} className="game-menu-item-down" src="exit.svg" alt="" /> : ''}
+            {exitGame ? (
+              <img onClick={exitGame} className="game-menu-item-down" src="exit.svg" alt="" />
+            ) : (
+              ""
+            )}
           </div>
         </div>
-
-
 
         <div className="nav-right">
-          <div className="displayName">
-            {user ? user.displayName : ''}
-          </div>
+          <div className="displayName">{user ? user.displayName : ""}</div>
 
-          {user ? <img onClick={() => setShowUserMenu(!showUserMenu)} className="profile-image" src={user.photoURL ? user.photoURL : 'profile.svg'} /> : ''}
-
+          {user ? (
+            <img
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="profile-image"
+              src={user.photoURL ? user.photoURL : "profile.svg"}
+            />
+          ) : (
+            <img
+              onClick={() => setAppStatus("authenticating")}
+              className="profile-image"
+              src={"profile.svg"}
+            />
+          )}
         </div>
 
-        {showUserMenu && user ? <div className="userMenu">
-          <img src={user.photoURL ? user.photoURL : 'profile.svg'} alt="" />
-          <div className='displayName'>{user.displayName}</div>
-          <div className='displayEmail'>{user.email}</div>
-          <button className='btn-blue' onClick={logoutUser}>Logout</button>
-
-        </div> : ''}
+        {showUserMenu && user ? (
+          <div className="userMenu">
+            <img src={user.photoURL ? user.photoURL : "profile.svg"} alt="" />
+            <div className="displayName">{user.displayName}</div>
+            <div className="displayEmail">{user.email}</div>
+            <button className="btn-blue" onClick={logoutUser}>
+              Logout
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </nav>
     </>
   )

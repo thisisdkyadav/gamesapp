@@ -1,15 +1,18 @@
-import React from 'react'
-import '../css/ludo.css';
-import Ludo from '../games/Ludo';
+import React from "react"
+import "../css/ludo.css"
+import Ludo from "../games/Ludo"
+import GamesMenu from "../components/GamesMenu/GamesMenu"
+import { useState } from "react"
 
-
-const Home = ({username}) => {
-
-
+const Home = () => {
+  const [game, setGame] = useState(null)
 
   return (
     <>
-          <Ludo username={username} />
+      {!game && <GamesMenu setGame={setGame} />}
+
+      {game === "ludo" && <Ludo />}
+      {/* <Ludo /> */}
     </>
   )
 }

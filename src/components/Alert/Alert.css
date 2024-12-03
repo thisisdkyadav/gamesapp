@@ -1,0 +1,55 @@
+.alert-container {
+  background-color: #beddff88;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 8888;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert {
+  max-width: 90vw;
+  width: 400px;
+  padding: 24px;
+  background-color: var(--box-b-color);
+  box-shadow: var(--box-shadow);
+  border-radius: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.alert button {
+  background-color: #f8fcff;
+  transition: 200ms ease-in-out all;
+  margin: 0;
+}
+
+.alert .alert-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5px;
+  width: 100%;
+}
+
+.alert .alert-buttons button {
+  width: 100%;
+}
+
+.alert .message {
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  margin: 0 0 10px 0;
+}
+
+@media (hover: hover) {
+  .alert button:hover {
+    background-color: rgb(0, 145, 255);
+    color: white;
+  }
+}

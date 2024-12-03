@@ -1,0 +1,22 @@
+:root {
+  /* .game-card */
+}
+
+.game-card {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 30px;
+  width: 300px;
+  height: 100px;
+  background-color: var(--box-b-color);
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-card .game-img-div {
+  height: 100%;
+}
+
+.game-card .game-img-div img {
+  height: 100%;
+}
