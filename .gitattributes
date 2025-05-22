@@ -1,0 +1,6 @@
+# Firebase configuration files
+firebase.json merge=ours
+.firebaserc merge=ours
+
+.firebase/ merge=ours
+.firebase\hosting.YnVpbGQ.cache merge=ours
